@@ -23,6 +23,7 @@ namespace ImageProcessor
 
             string image = await request.ReadAsStringAsync();   
             image = image.Replace("data:image/png;base64,", "");
+            
             try
             {
                 log.Info("Building configuration");
@@ -42,6 +43,7 @@ namespace ImageProcessor
                 log.Info("Completed getting secrets");
 
                 string emotion = await GetEmotion(image, uri, secret, log);
+
                 return new OkObjectResult(emotion);
             }
             catch (Exception exception)
