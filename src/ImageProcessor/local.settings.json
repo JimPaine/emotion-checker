@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "vault_uri": "https://emotionfunc46653vault.vault.azure.net/",
+    "MSI_ENDPOINT": "https://emotionfunc15043.azurewebsites.net/MSI/token/",
+    "MSI_SECRET": "DB4AC45A6C2B4A6BA88FD0F7A61070FA"
+  }
+  }

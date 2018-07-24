@@ -1,0 +1,37 @@
+{
+    "applicationInsights": {
+      "sampling": {
+        "isEnabled": true,
+        "maxTelemetryItemsPerSecond": 100
+      }
+    },
+    "functions": [ "EmotionChecker" ],
+    "functionTimeout": "00:05:00",
+    "healthMonitor": {
+      "enabled": true,
+      "healthCheckInterval": "00:00:10",
+      "healthCheckWindow": "00:02:00",
+      "healthCheckThreshold": 6,
+      "counterThreshold": 0.80
+    },
+    "http": {
+      "routePrefix": "api",
+      "maxOutstandingRequests": 20,
+      "maxConcurrentRequests": 10,
+      "dynamicThrottlesEnabled": false
+    },
+    "logger": {
+      "categoryFilter": {
+        "defaultLevel": "Information",
+        "categoryLevels": {
+          "Host": "Error",
+          "Function": "Error",
+          "Host.Aggregator": "Information"
+        }
+      }
+    },
+    "tracing": {
+      "consoleLevel": "verbose",
+      "fileLoggingMode": "debugOnly"
+    }
+  }
