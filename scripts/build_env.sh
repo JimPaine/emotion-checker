@@ -16,3 +16,4 @@ terraform apply -auto-approve \
     -var "client_secret=$client_secret" \
     -var "tenant_id=$tenant_id" \
     ../env
+    
