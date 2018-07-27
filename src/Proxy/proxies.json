@@ -8,6 +8,7 @@
                     "GET"
                 ]
             },
+            
             "backendUri": "{bloblocation}/index.html"
         }
     }
