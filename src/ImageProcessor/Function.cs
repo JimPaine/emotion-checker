@@ -1,3 +1,4 @@
+using ImageProcessor.models;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,8 +22,7 @@ namespace ImageProcessor
         {
             log.Info("Processing request");
 
-            string image = await request.ReadAsStringAsync();   
-            image = image.Replace("data:image/png;base64,", "");
+            string image = await request.ReadAsStringAsync();
             
             try
             {
@@ -143,6 +143,9 @@ namespace ImageProcessor
         private static async Task<string> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
         {
             log.Info($"Attempt to check face emotion via {faceUri}");
+
+            image = image.Replace("data:image/png;base64,", "");
+
             using (HttpClient httpClient = HttpClientFactory.Create())
             using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
             {
@@ -189,35 +192,5 @@ namespace ImageProcessor
             }
             return emotion;
         }
-    }
-    public class FaceEmotion 
-    {
-        public double anger { get; set; }
-
-        public double contempt { get; set; }
-
-        public double disgust { get; set; }
-
-        public double fear { get; set; }
-
-        public double happiness { get; set; }
-
-        public double neutral { get; set; }
-
-        public double sadness { get; set; }
-
-        public double surprise { get; set; }
-    }
-
-    public class FaceResponse
-    {
-        public string faceId { get; set; }
-
-        public FaceResponseDetail faceAttributes { get; set; }
-    }
-
-    public class FaceResponseDetail
-    {
-        public FaceEmotion emotion { get; set; }
     }
 }
