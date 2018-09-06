@@ -26,13 +26,10 @@ resource "azurerm_function_app" "emotionfunc" {
   storage_connection_string = "${azurerm_storage_account.emotionfunc.primary_connection_string}"
 
   # looks like at the moment for v2 http version has to be http1.1 and app has to be 32bit
-  version = "beta"
+  version = "~2"
 
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
-    FUNCTIONS_EXTENSION_VERSION = "2.0.11961-alpha" #temp pin to avoid breaking changes in next release
-
-    # build manually to due ro circular dependency between function app and key vault (kv needs identity of func and func needs uri of vault)
     vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
   }
 

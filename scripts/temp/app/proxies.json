@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "index": {
+            "matchCondition": {
+                "route": "/",
+                "methods": [
+                    "GET"
+                ]
+            },
+            
+            "backendUri": "https://functest48395store.blob.core.windows.net/proxy/index.html"
+        }
+    }
+}

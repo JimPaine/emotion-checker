@@ -1,6 +1,6 @@
 #!/bin/bash
 
-resource_name="emotionfunc"
+resource_name=""
 subscription_id=""
 client_id=""
 client_secret=""

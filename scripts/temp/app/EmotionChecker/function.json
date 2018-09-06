@@ -1,0 +1,17 @@
+{
+  "generatedBy": "Microsoft.NET.Sdk.Functions-1.0.19",
+  "configurationSource": "attributes",
+  "bindings": [
+    {
+      "type": "httpTrigger",
+      "methods": [
+        "post"
+      ],
+      "authLevel": "anonymous",
+      "name": "request"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "../bin/ImageProcessor.dll",
+  "entryPoint": "ImageProcessor.Function.Check"
+}
