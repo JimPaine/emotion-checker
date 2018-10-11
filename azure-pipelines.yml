@@ -16,7 +16,7 @@ steps:
        -backend-config="key=$(tfstate_key)" \
        -backend-config="access_key=$(tfstate_access_key)"
 
-  workingDirectory: /env
+  workingDirectory: ./env
   displayName: 'Terraform init'
 
 
@@ -28,7 +28,7 @@ steps:
        -var "client_secret=$(client_secret)" \
        -var "tenant_id=$(tenant_id)"
 
-  workingDirectory: /env
+  workingDirectory: ./env
   displayName: 'Terraform apply'
 
 
@@ -51,15 +51,15 @@ steps:
    
    sed -i "s|{bloblocation}|$blob_path$container|g" ./src/Proxy/proxies.json
 
-  workingDirectory: /env
+  workingDirectory: ./env
   displayName: 'Update proxies'
 
 
 - task: CopyFiles@2
   displayName: 'Include proxies.json in publish artifact'
   inputs:
-    SourceFolder: /src/Proxy/proxies.json
-    TargetFolder: /src/ImageProcessor/bin/Release/netstandard2.0/publish/
+    SourceFolder: ./src/Proxy/proxies.json
+    TargetFolder: ./src/ImageProcessor/bin/Release/netstandard2.0/publish/
 
 
 - script: |
@@ -103,5 +103,5 @@ steps:
        --name $functionname \
        --resource-group $resourcegroup 
 
-  workingDirectory: /env
+  workingDirectory: ./env
   displayName: Publish
