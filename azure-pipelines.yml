@@ -14,9 +14,9 @@ steps:
        -backend-config="storage_account_name=$(tfstate_storage_account)" \
        -backend-config="container_name=$(tfstate_container)" \
        -backend-config="key=$(tfstate_key)" \
-       -backend-config="access_key=$(tfstate_access_key)" \
-       ./env
+       -backend-config="access_key=$(tfstate_access_key)"
 
+  workingDirectory: /env
   displayName: 'Terraform init'
 
 
@@ -26,9 +26,9 @@ steps:
        -var "resource_name=$(resource_name)" \
        -var "client_id=$(client_id)" \
        -var "client_secret=$(client_secret)" \
-       -var "tenant_id=$(tenant_id)" \
-       ./env
+       -var "tenant_id=$(tenant_id)"
 
+  workingDirectory: /env
   displayName: 'Terraform apply'
 
 
@@ -43,16 +43,15 @@ steps:
     modifyOutputPath: false
 
 - script: |
-   cd env
    blob_path= terraform output -json primary_blob_endpoint
    blob_path= jq '.value' $blob_path
    blob_path= tr -d '"' $blob_path
    
    container="proxy"
    
-   sed -i "s|{bloblocation}|$blob_path$container|g" ./src/Proxy/proxies.json 
-   cd ../
+   sed -i "s|{bloblocation}|$blob_path$container|g" ./src/Proxy/proxies.json
 
+  workingDirectory: /env
   displayName: 'Update proxies'
 
 
@@ -90,13 +89,13 @@ steps:
    
    az storage file upload-batch \
        --destination "$fileendpoint$functionname-content" \
-       --source ./src/ImageProcessor/bin/Release/netstandard2.0/publish/ \
+       --source ../src/ImageProcessor/bin/Release/netstandard2.0/publish/ \
        --destination-path "site/wwwroot" \
        --connection-string $connectionstring
    
    az storage blob upload \
        --container-name "proxy" \
-       --file ./src/Proxy/index.html \
+       --file ../src/Proxy/index.html \
        --name "index.html" \
        --connection-string $connectionstring
    
@@ -104,4 +103,5 @@ steps:
        --name $functionname \
        --resource-group $resourcegroup 
 
+  workingDirectory: /env
   displayName: Publish
