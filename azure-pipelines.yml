@@ -43,7 +43,7 @@ steps:
     modifyOutputPath: false
 
 - script: |
-   blob_path= terraform output -json primary_blob_endpoint
+   blob_path= terraform output -json primary_blob_endpoint ./env
    blob_path= jq '.value' $blob_path
    blob_path= tr -d '"' $blob_path
    
