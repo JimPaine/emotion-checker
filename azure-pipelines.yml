@@ -43,13 +43,15 @@ steps:
     modifyOutputPath: false
 
 - script: |
-   blob_path= terraform output -json primary_blob_endpoint ./env
+   cd env
+   blob_path= terraform output -json primary_blob_endpoint
    blob_path= jq '.value' $blob_path
    blob_path= tr -d '"' $blob_path
    
    container="proxy"
    
    sed -i "s|{bloblocation}|$blob_path$container|g" ./src/Proxy/proxies.json 
+   cd ../
 
   displayName: 'Update proxies'
 
@@ -57,8 +59,8 @@ steps:
 - task: CopyFiles@2
   displayName: 'Include proxies.json in publish artifact'
   inputs:
-    SourceFolder: ./src/Proxy/proxies.json
-    TargetFolder: ./src/ImageProcessor/bin/Release/netstandard2.0/publish/
+    SourceFolder: /src/Proxy/proxies.json
+    TargetFolder: /src/ImageProcessor/bin/Release/netstandard2.0/publish/
 
 
 - script: |
