@@ -14,7 +14,8 @@ steps:
        -backend-config="storage_account_name=$(tfstate_storage_account)" \
        -backend-config="container_name=$(tfstate_container)" \
        -backend-config="key=$(tfstate_key)" \
-       -backend-config="access_key=$(tfstate_access_key)" 
+       -backend-config="access_key=$(tfstate_access_key)" \
+       /env
 
   displayName: 'Terraform init'
 
@@ -25,7 +26,8 @@ steps:
        -var "resource_name=$(resource_name)" \
        -var "client_id=$(client_id)" \
        -var "client_secret=$(client_secret)" \
-       -var "tenant_id=$(tenant_id)" 
+       -var "tenant_id=$(tenant_id)" \
+       /env
 
   displayName: 'Terraform apply'
 
