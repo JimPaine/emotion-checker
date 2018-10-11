@@ -49,7 +49,7 @@ steps:
    
    container="proxy"
    
-   sed -i "s|{bloblocation}|$blob_path$container|g" ./src/Proxy/proxies.json
+   sed -i "s|{bloblocation}|$blob_path$container|g" ../src/Proxy/proxies.json
 
   workingDirectory: ./env
   displayName: 'Update proxies'
