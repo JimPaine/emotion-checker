@@ -37,7 +37,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: '/src/**/*.csproj'
+    projects: '/src/ImageProcessor/ImageProcessor.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'    
     zipAfterPublish: false
     modifyOutputPath: false
