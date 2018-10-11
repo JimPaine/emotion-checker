@@ -35,7 +35,12 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Build Function'
   inputs:
-    command: build
+    command: publish
+    publishWebProjects: false
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - script: |
    blob_path = terraform output -json primary_blob_endpoint
