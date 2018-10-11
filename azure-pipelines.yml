@@ -63,21 +63,21 @@ steps:
 
 
 - script: |
-   connectionstring= terraform output -json primary_connection_string
-   connectionstring= jq '.value' $connectionstring
-   connectionstring= tr -d '"' $connectionstring
+   connectionstring=terraform output -json primary_connection_string
+   connectionstring=jq '.value' $connectionstring
+   connectionstring=tr -d '"' $connectionstring
    
-   fileendpoint= terraform output -json file_endpoint
-   fileendpoint= jq '.value' $fileendpoint
-   fileendpoint= tr -d '"' $fileendpoint
+   fileendpoint=terraform output -json file_endpoint
+   fileendpoint=jq '.value' $fileendpoint
+   fileendpoint=tr -d '"' $fileendpoint
    
-   functionname= terraform output -json function_name
-   functionname=  jq '.value' $functionname
-   functionname= tr -d '"' $functionname
+   functionname=terraform output -json function_name
+   functionname=jq '.value' $functionname
+   functionname=tr -d '"' $functionname
    
-   resourcegroup= terraform output -json resource_group
-   resourcegroup= jq '.value' $resourcegroup
-   resourcegroup= tr -d '"' $resourcegroup
+   resourcegroup=terraform output -json resource_group
+   resourcegroup=jq '.value' $resourcegroup
+   resourcegroup=tr -d '"' $resourcegroup
    
    az functionapp stop \
        --name $functionname \
