@@ -36,7 +36,7 @@ steps:
    container="proxy"   
    sed -i "s|{bloblocation}|$blob_path$container|g" ../src/ImageProcessor/proxies.json
   workingDirectory: ./env
-  displayName: 'Run script ./scripts/transform-proxies.sh'
+  displayName: 'Transform proxies'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Function'
@@ -51,22 +51,11 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
 
-- script: |
-   connectionstring=terraform output -json primary_connection_string
-   connectionstring=jq '.value' $connectionstring
-   connectionstring=tr -d '"' $connectionstring
-   
-   fileendpoint=terraform output -json file_endpoint
-   fileendpoint=jq '.value' $fileendpoint
-   fileendpoint=tr -d '"' $fileendpoint
-   
-   functionname=terraform output -json function_name
-   functionname=jq '.value' $functionname
-   functionname=tr -d '"' $functionname
-   
-   resourcegroup=terraform output -json resource_group
-   resourcegroup=jq '.value' $resourcegroup
-   resourcegroup=tr -d '"' $resourcegroup
+- bash: |
+   connectionstring=$(terraform output -json primary_connection_string | jq '.value' | tr -d '"')   
+   fileendpoint=$(terraform output -json file_endpoint | jq '.value' | tr -d '"')   
+   functionname=$(terraform output -json function_name | jq '.value' | tr -d '"')   
+   resourcegroup=$(terraform output -json resource_group | jq '.value' | tr -d '"')
    
    az functionapp stop \
        --name $functionname \
