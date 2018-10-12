@@ -49,6 +49,9 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: false
 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
 - script: |
    connectionstring=terraform output -json primary_connection_string
    connectionstring=jq '.value' $connectionstring
