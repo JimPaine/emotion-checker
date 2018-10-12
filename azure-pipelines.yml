@@ -56,8 +56,9 @@ steps:
 - task: CopyFiles@2
   displayName: 'Include proxies.json in publish artifact'
   inputs:
-    SourceFolder: ./src/Proxy/proxies.json
-    TargetFolder: ./src/ImageProcessor/bin/Release/netstandard2.0/publish/
+    Contents: proxies.json
+    SourceFolder: /src/Proxy/
+    TargetFolder: /src/ImageProcessor/bin/Release/netstandard2.0/publish/
 
 
 - script: |
