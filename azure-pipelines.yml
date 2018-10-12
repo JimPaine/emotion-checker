@@ -31,7 +31,7 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform apply'
 
-- bash: sudo ../scripts/transform-proxies.sh
+- bash: ../scripts/transform-proxies.sh
   workingDirectory: ./env
   displayName: 'Run script ./scripts/transform-proxies.sh'
 
