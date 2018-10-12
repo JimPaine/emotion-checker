@@ -31,10 +31,8 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform apply'
 
-- task: BatchScript@1
+- bash: ./ ./scripts/transform-proxies.sh
   displayName: 'Run script ./scripts/transform-proxies.sh'
-  inputs:
-    filename: './scripts/transform-proxies.sh'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Function'
