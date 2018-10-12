@@ -31,7 +31,7 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform apply'
 
-- bash: ./ ./scripts/transform-proxies.sh
+- bash: ./scripts/transform-proxies.sh
   displayName: 'Run script ./scripts/transform-proxies.sh'
 
 - task: DotNetCoreCLI@2
