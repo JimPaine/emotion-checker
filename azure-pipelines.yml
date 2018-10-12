@@ -31,13 +31,10 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform apply'
 
-- script: |
-   blob_path=(terraform output primary_blob_endpoint)   
-   container="proxy"   
-   sed -i "s|{bloblocation}|$blob_path$container|g" ../src/ImageProcessor/proxies.json
-
-  workingDirectory: ./env
-  displayName: 'Update proxies'
+- task: BatchScript@1
+  displayName: 'Run script ./scripts/transform-proxies.sh'
+  inputs:
+    filename: './scripts/transform-proxies.sh'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Function'
