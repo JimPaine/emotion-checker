@@ -4,6 +4,12 @@
 
 ## Architecture
 
+- Consumer calls the function proxy which presents static html
+- The static html allows the user to take a photo and calls the API
+- The function app uses Managed Service Identity to call Key Vault
+- Key vault used to stored the connection details for the Face API
+- The Face API is called with the original image and obtains the emotion
+
 ![Architecture](/docs/images/architecture.png)
 
 ## Giving it a go
