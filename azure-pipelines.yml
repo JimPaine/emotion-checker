@@ -57,6 +57,12 @@ steps:
    functionname=$(terraform output -json function_name | jq '.value' | tr -d '"')   
    resourcegroup=$(terraform output -json resource_group | jq '.value' | tr -d '"')
    
+   az login \
+        --service-principal \
+        -u $1 \
+        -p $2 \
+        --tenant $3
+
    az functionapp stop \
        --name $functionname \
        --resource-group $resourcegroup
@@ -67,7 +73,7 @@ steps:
    
    az storage file upload-batch \
        --destination "$fileendpoint$functionname-content" \
-       --source ../src/ImageProcessor/bin/Release/netstandard2.0/publish/ \
+       --source $(build.artifactstagingdirectory) \
        --destination-path "site/wwwroot" \
        --connection-string $connectionstring
    
@@ -81,5 +87,6 @@ steps:
        --name $functionname \
        --resource-group $resourcegroup 
 
+  arguments: '$(app_url) $(client_secret) $(tenant_id)'
   workingDirectory: ./env
   displayName: Publish
