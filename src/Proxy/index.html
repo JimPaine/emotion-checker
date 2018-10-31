@@ -139,7 +139,7 @@
         }
 
         var flag = 0;
-        video.addEventListener('play', function () {
+        video.addEventListener('play', function (x) {
             var $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
@@ -149,7 +149,7 @@
                     flag++;
                     if(flag === 2)
                     {
-                        processImage();
+                        processImage(x);
                     }
 
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
