@@ -139,7 +139,7 @@
         }
 
         var flag = 0;
-        video.addEventListener('play', function (x) {
+        video.addEventListener('play', function () {
             var $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
@@ -157,7 +157,7 @@
             })();
         }, 0);
 
-        function processImage()
+        function processImage(x)
         {
             flag = 0;
             $.ajax({
