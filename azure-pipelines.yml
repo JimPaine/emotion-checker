@@ -79,7 +79,7 @@ steps:
    
    az storage blob upload \
        --container-name "proxy" \
-       --file ../src/Proxy/index.html \
+       --file ./src/Proxy/index.html \
        --name "index.html" \
        --connection-string $connectionstring
    
