@@ -42,9 +42,9 @@ namespace ImageProcessor
                 string uri = await GetSecret(vaultUri, "face-endpoint", config, log);
                 log.Info("Completed getting secrets");
 
-                string emotion = await GetEmotion(image, uri, secret, log);
+                FaceResponse[] response = await GetEmotion(image, uri, secret, log);
 
-                return new OkObjectResult(emotion);
+                return new OkObjectResult(response);
             }
             catch (Exception exception)
             {
@@ -140,7 +140,7 @@ namespace ImageProcessor
             }
         }
 
-        private static async Task<string> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
+        private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
         {
             log.Info($"Attempt to check face emotion via {faceUri}");
 
@@ -170,14 +170,17 @@ namespace ImageProcessor
 
                 if(result == null || result.Length < 1) 
                 {                    
-                    return "No face detected";
+                    return null;
                 }   
 
-                return GetEmotion(result[0].faceAttributes.emotion);
+                for(int n = 0; n < result.Length; n++){
+                    GetEmotion(result[n].faceAttributes.emotion);
+                }
+                return result;
             }     
         }
 
-        private static string GetEmotion(FaceEmotion faceEmotion)
+        private static void GetEmotion(FaceEmotion faceEmotion)
         {
             PropertyInfo[] properties = faceEmotion.GetType().GetProperties();
             double high = -1;
@@ -190,7 +193,7 @@ namespace ImageProcessor
                     emotion = property.Name;
                 }
             }
-            return emotion;
+            faceEmotion.result = emotion;
         }
     }
 }

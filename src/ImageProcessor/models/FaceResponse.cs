@@ -4,6 +4,8 @@ namespace ImageProcessor.models
     {
         public string faceId { get; set; }
 
+        public FaceRectangle faceRectangle { get; set;}
+
         public FaceResponseDetail faceAttributes { get; set; }
     }
 }

@@ -2,6 +2,7 @@ namespace ImageProcessor.models
 {
     public class FaceEmotion 
     {
+        public string result { get; set; }
         public double anger { get; set; }
 
         public double contempt { get; set; }
