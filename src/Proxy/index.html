@@ -91,10 +91,12 @@
 
     <script>
         var canvas = document.getElementById('canvas');
+        var faceCanvas = document.getElementById('faceCanvas');
         var context = canvas.getContext('2d');
         var video = document.getElementById('video'); 
         var videoWrapper = document.getElementById('videoWrapper');             
-        var canvasWrapper = document.getElementById('canvasWrapper'); 
+        var canvasWrapper = document.getElementById('canvasWrapper');           
+        var faceWrapper = document.getElementById('faceWrapper'); 
                 
         function size(){
             canvas.width = video.clientWidth;
@@ -121,7 +123,7 @@
                 if (!$this.paused && !$this.ended) {
                     context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
                     var x = canvas.toDataURL("image/png"); 
-                    
+                    processImage(x);
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
@@ -139,7 +141,6 @@
 
         function processImage(x)
         {
-            flag = 0;
             $.ajax({
                 url: "/api/EmotionChecker",
                 type: "POST",
@@ -147,7 +148,15 @@
                 contentType: "application/octet-stream",
 
                 success: function (response) {
-                            
+                    var ctx = faceCanvas.getContext('2d');
+                    response.foreach(function(face){
+                        context.beginPath();
+                        context.rect(face.faceRectangle.top, face.faceRectangle.left, face.faceRectangle.width, face.faceRectangle.height);
+                        context.lineWidth = 7;
+                        context.strokeStyle = 'black';
+                        context.stroke(); 
+                    });
+                          
                 },
                 error: function (xhr, status, error) {
                     console.log(error);

@@ -38,8 +38,11 @@ namespace ImageProcessor
                 log.Info($"Vault Uri: {vaultUri}");
 
                 log.Info("Getting Secrets from vault");
-                string secret = await GetSecret(vaultUri, "face-key", config, log);
-                string uri = await GetSecret(vaultUri, "face-endpoint", config, log);
+                Random random = new Random();
+                int n = random.Next(0,3);
+                string instance = n > 0 ? n.ToString() : string.Empty;
+                string secret = await GetSecret(vaultUri, $"face-key{instance}", config, log);
+                string uri = await GetSecret(vaultUri, $"face-endpoint{instance}", config, log);
                 log.Info("Completed getting secrets");
 
                 FaceResponse[] response = await GetEmotion(image, uri, secret, log);
@@ -154,7 +157,7 @@ namespace ImageProcessor
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
                 HttpResponseMessage response = await httpClient.PostAsync(
-                    new Uri($"{faceUri}/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=emotion"), content);
+                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion"), content);
                 
                 if (!response.IsSuccessStatusCode)
                 {

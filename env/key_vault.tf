@@ -48,3 +48,38 @@ resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint" {
   value     = "${azurerm_template_deployment.emotionfunc.outputs["face_endpoint"]}"
   vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
 }
+
+resource "azurerm_key_vault_secret" "emotionfunc-face-key1" {
+  name      = "face-key1"
+  value     = "${azurerm_template_deployment.emotionfunc1.outputs["face_key"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint1" {
+  name      = "face-endpoint1"
+  value     = "${azurerm_template_deployment.emotionfunc1.outputs["face_endpoint"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "emotionfunc-face-key2" {
+  name      = "face-key2"
+  value     = "${azurerm_template_deployment.emotionfunc2.outputs["face_key"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint2" {
+  name      = "face-endpoint2"
+  value     = "${azurerm_template_deployment.emotionfunc2.outputs["face_endpoint"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
+resource "azurerm_key_vault_secret" "emotionfunc-face-key3" {
+  name      = "face-key3"
+  value     = "${azurerm_template_deployment.emotionfunc3.outputs["face_key"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint3" {
+  name      = "face-endpoint3"
+  value     = "${azurerm_template_deployment.emotionfunc3.outputs["face_endpoint"]}"
+  vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
+}
