@@ -176,9 +176,9 @@ namespace ImageProcessor
                     return null;
                 }   
 
-                for(int n = 0; n < result.Length; n++){
+                // for(int n = 0; n < result.Length; n++){
                    // GetEmotion(result[n].faceAttributes.emotion);
-                }
+                // }
                 return result;
             }     
         }
