@@ -149,8 +149,10 @@
 
                 success: function (response) {
                     var ctx = faceCanvas.getContext('2d');
+                    var json = JSON.stringify(response, null, 2);
+                    var item = JSON.parse(json);
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
-                    for (i = 0; i < response.length; i++){
+                    for (i = 0; i < item.length; i++){
                         ctx.beginPath();
                         ctx.rect(face.faceRectangle.top, face.faceRectangle.left, face.faceRectangle.width, face.faceRectangle.height);
                         ctx.lineWidth = 7;
