@@ -85,6 +85,7 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
            
@@ -97,6 +98,7 @@
         var videoWrapper = document.getElementById('videoWrapper');             
         var canvasWrapper = document.getElementById('canvasWrapper');           
         var faceWrapper = document.getElementById('faceWrapper'); 
+        var connection = $.connection('api/GetSignalRInfo');
                 
         function size(){
             canvas.width = video.clientWidth;
@@ -147,7 +149,7 @@
         function processImage(x)
         {
             $.ajax({
-                url: "https://emotionchecker11778.azurewebsites.net/api/EmotionChecker",
+                url: "api/EmotionChecker",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
@@ -166,7 +168,7 @@
                     for (i = 0; i < item.length; i++){
                         ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);                        
                     }
-                    
+
                     ctx.stroke();                          
                 },
                 error: function (xhr, status, error) {

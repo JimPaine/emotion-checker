@@ -6,7 +6,7 @@
         "maxTelemetryItemsPerSecond": 100
       }
     },
-    "functions": [ "EmotionChecker" ],
+    "functions": [ "EmotionChecker", "GetSignalRInfo" ],
     "functionTimeout": "00:05:00",
     "healthMonitor": {
       "enabled": true,
