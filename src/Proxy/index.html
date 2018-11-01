@@ -98,7 +98,26 @@
         var videoWrapper = document.getElementById('videoWrapper');             
         var canvasWrapper = document.getElementById('canvasWrapper');           
         var faceWrapper = document.getElementById('faceWrapper'); 
+
         var connection = $.connection('api/GetSignalRInfo');
+        connection.client.newFace = function(response){
+            var ctx = faceCanvas.getContext('2d');
+            var json = JSON.stringify(response, null, 2);
+            var item = JSON.parse(json);
+
+            ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
+
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'black'; 
+            ctx.beginPath();
+
+            for (i = 0; i < item.length; i++){
+                ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);                        
+            }
+
+            ctx.stroke();
+        };
+        connection.start({ transport: ['longPolling','webSockets'] });
                 
         function size(){
             canvas.width = video.clientWidth;
@@ -127,7 +146,8 @@
                     var x = canvas.toDataURL("image/png"); 
                     flag++;
                     if(flag == 30){
-                        processImage(x);
+                        connection.send(x);
+                        //processImage(x);
                         flag = 0;
                     }
                     processImage(x);
@@ -148,6 +168,7 @@
 
         function processImage(x)
         {
+            
             $.ajax({
                 url: "api/EmotionChecker",
                 type: "POST",
