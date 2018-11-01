@@ -157,7 +157,7 @@ namespace ImageProcessor
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
                 HttpResponseMessage response = await httpClient.PostAsync(
-                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion"), content);
+                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion,gender"), content);
                 
                 if (!response.IsSuccessStatusCode)
                 {
