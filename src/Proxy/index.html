@@ -151,7 +151,7 @@
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
-
+                
                 success: function (response) {
                     var ctx = faceCanvas.getContext('2d');
                     var json = JSON.stringify(response, null, 2);
@@ -166,6 +166,8 @@
                     }                          
                 },
                 error: function (xhr, status, error) {
+                    var ctx = faceCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
                     console.log(error);
                 }
             });
