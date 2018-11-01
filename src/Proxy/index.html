@@ -149,12 +149,14 @@
 
                 success: function (response) {
                     var ctx = faceCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
                     response.foreach(function(face){
-                        context.beginPath();
-                        context.rect(face.faceRectangle.top, face.faceRectangle.left, face.faceRectangle.width, face.faceRectangle.height);
-                        context.lineWidth = 7;
-                        context.strokeStyle = 'black';
-                        context.stroke(); 
+                        console.log("drawing box");
+                        ctx.beginPath();
+                        ctx.rect(face.faceRectangle.top, face.faceRectangle.left, face.faceRectangle.width, face.faceRectangle.height);
+                        ctx.lineWidth = 7;
+                        ctx.strokeStyle = 'black';
+                        ctx.stroke(); 
                     });
                           
                 },
