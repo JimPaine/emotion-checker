@@ -105,7 +105,7 @@ resource "azurerm_template_deployment" "emotionfunc1" {
   DEPLOY
 
   parameters {
-    "name"     = "face${random_id.emotionfunc.dec}"
+    "name"     = "face1${random_id.emotionfunc.dec}"
     "location" = "${azurerm_resource_group.emotionfunc.location}"
     "apiType"  = "Face"
     "sku"      = "S0"
@@ -163,7 +163,7 @@ resource "azurerm_template_deployment" "emotionfunc2" {
   DEPLOY
 
   parameters {
-    "name"     = "face${random_id.emotionfunc.dec}"
+    "name"     = "face2${random_id.emotionfunc.dec}"
     "location" = "${azurerm_resource_group.emotionfunc.location}"
     "apiType"  = "Face"
     "sku"      = "S0"
@@ -221,7 +221,7 @@ resource "azurerm_template_deployment" "emotionfunc3" {
   DEPLOY
 
   parameters {
-    "name"     = "face${random_id.emotionfunc.dec}"
+    "name"     = "face3${random_id.emotionfunc.dec}"
     "location" = "${azurerm_resource_group.emotionfunc.location}"
     "apiType"  = "Face"
     "sku"      = "S0"
