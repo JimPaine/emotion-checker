@@ -150,15 +150,13 @@
                 success: function (response) {
                     var ctx = faceCanvas.getContext('2d');
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
-                    response.foreach(function(face){
-                        console.log("drawing box");
+                    for (i = 0; i < response.length; i++){
                         ctx.beginPath();
                         ctx.rect(face.faceRectangle.top, face.faceRectangle.left, face.faceRectangle.width, face.faceRectangle.height);
                         ctx.lineWidth = 7;
                         ctx.strokeStyle = 'black';
-                        ctx.stroke(); 
-                    });
-                          
+                        ctx.stroke();
+                    }                          
                 },
                 error: function (xhr, status, error) {
                     console.log(error);
