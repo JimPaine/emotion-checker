@@ -47,7 +47,7 @@ namespace ImageProcessor
 
                 FaceResponse[] response = await GetEmotion(image, uri, secret, log);
 
-                return new OkObjectResult(response);
+                return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
             catch (Exception exception)
             {

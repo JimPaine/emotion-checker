@@ -116,14 +116,18 @@
             size();
         });      
 
-
+        var flag = 0;
         video.addEventListener('play', function () {
             var $this = this; //cache
             (function loop() {
                 if (!$this.paused && !$this.ended) {
                     context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
                     var x = canvas.toDataURL("image/png"); 
-                    processImage(x);
+                    flag++;
+                    if(flag === 2)
+                    {
+                        processImage(x);
+                    }                    
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
@@ -141,6 +145,7 @@
 
         function processImage(x)
         {
+            flag = 0;
             $.ajax({
                 url: "https://emotionchecker11778.azurewebsites.net/api/EmotionChecker",
                 type: "POST",
@@ -154,7 +159,7 @@
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
                     for (i = 0; i < item.length; i++){
                         ctx.beginPath();
-                        ctx.rect(item.faceRectangle.top, item.faceRectangle.left, item.faceRectangle.width, item.faceRectangle.height);
+                        ctx.rect(item[i].faceRectangle.top, item[i].faceRectangle.left, item[i].faceRectangle.width, item[i].faceRectangle.height);
                         ctx.lineWidth = 7;
                         ctx.strokeStyle = 'black';
                         ctx.stroke();
