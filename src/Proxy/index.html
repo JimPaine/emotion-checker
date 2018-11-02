@@ -154,7 +154,7 @@
         function processImage(x)
         {         
             $.ajax({
-                url: "api/EmotionChecker",
+                url: "https://emotionchecker11778.azurewebsites.net/api/EmotionChecker",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
@@ -172,6 +172,7 @@
                     ctx.beginPath();
 
                     for (i = 0; i < item.length; i++){
+                        ctx.strokeText(item[i].faceId, item[i].faceRectangle.left, item[i].faceRectangle.top-10);
                         ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);  
                         ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
                         ctx.strokeText(item[i].faceAttributes.emotion.result, item[i].faceRectangle.left+50, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
