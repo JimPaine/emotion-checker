@@ -53,9 +53,8 @@ namespace ImageProcessor
             }
             catch (Exception exception)
             {
-                Exception lowest = exception.GetBaseException() ?? exception;
-                log.Error("Failed processing image", lowest);
-                return new BadRequestObjectResult(lowest);
+                log.Error("Failed processing image", exception);
+                return new BadRequestObjectResult(exception);
             }
         }
         private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
