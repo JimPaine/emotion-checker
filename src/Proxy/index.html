@@ -117,19 +117,23 @@
             size();
         });      
 
+        var imageProcessing = false;
+
         video.addEventListener('play', function () {
             var $this = this; //cache
-            var flag = 0;
+
             (function loop() {
                 if (!$this.paused && !$this.ended) {
                     context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
                     var x = canvas.toDataURL("image/png"); 
-                    flag++;
-                    if(flag == 30){
+
+                    if(imageProcessing === false){
+                        imageProcessing = true;
+                        console.log(imageProcessing);                        
                         processImage(x);
-                        flag = 0;
-                    }
-                    processImage(x);
+                        console.log(imageProcessing);
+                    }  
+                                        
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
@@ -144,10 +148,11 @@
                 });                
             }
         
-
-        function processImage(x)
-        {
+        
             
+        
+        function processImage(x)
+        {         
             $.ajax({
                 url: "api/EmotionChecker",
                 type: "POST",
@@ -161,20 +166,26 @@
 
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
 
-                    ctx.lineWidth = 5;
+                    ctx.lineWidth = 2;
+                    ctx.font = "10px Arial";
                     ctx.strokeStyle = 'black'; 
                     ctx.beginPath();
 
                     for (i = 0; i < item.length; i++){
-                        ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);                        
+                        ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);  
+                        ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
+                        ctx.strokeText(item[i].faceAttributes.emotion.result, item[i].faceRectangle.left+50, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
                     }
 
-                    ctx.stroke();                          
+                    ctx.stroke();  
+                    console.log("Found faces");
+                    imageProcessing = false;
                 },
                 error: function (xhr, status, error) {
                     var ctx = faceCanvas.getContext('2d');
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
                     console.log(error);
+                    imageProcessing = false;
                 }
             });
         }
