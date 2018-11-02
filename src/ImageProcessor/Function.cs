@@ -26,12 +26,12 @@ namespace ImageProcessor
         }
 
         [FunctionName("EmotionChecker")]        
-        public static async Task Check(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]object request, [SignalR(HubName = "face")]IAsyncCollector<SignalRMessage> signalRMessages, TraceWriter log, ExecutionContext context)
+        public static async Task<IActionResult> Check(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, TraceWriter log, ExecutionContext context)
         {
             log.Info("Processing request");
 
-            string image = (string)request;
+            string image = await request.ReadAsStringAsync();
             
             try
             {
@@ -56,20 +56,13 @@ namespace ImageProcessor
 
                 FaceResponse[] response = await GetEmotion(image, uri, secret, log);
 
-                if(response != null)
-                {
-                    await signalRMessages.AddAsync(
-                        new SignalRMessage 
-                        {                                            
-                            Target = "newFace", 
-                            Arguments = new [] { response } 
-                        });
-                }
+                return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
             catch (Exception exception)
             {
                 Exception lowest = exception.GetBaseException() ?? exception;
                 log.Error("Failed processing image", lowest);
+                return new BadRequestObjectResult(lowest);
             }
         }
 
