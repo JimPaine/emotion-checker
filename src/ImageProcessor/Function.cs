@@ -42,19 +42,12 @@ namespace ImageProcessor
                     .AddEnvironmentVariables()
                     .Build();
                 log.Info("Completed building configuration");
-
-                string vaultUri = config["vault_uri"];
-                log.Info($"Vault Uri: {vaultUri}");
-
-                log.Info("Getting Secrets from vault");
+                
                 Random random = new Random();
-                int n = random.Next(0,3);
-                string instance = n > 0 ? n.ToString() : string.Empty;
-                string secret = await GetSecret(vaultUri, $"face-key{instance}", config, log);
-                string uri = await GetSecret(vaultUri, $"face-endpoint{instance}", config, log);
-                log.Info("Completed getting secrets");
+                int instance = random.Next(0,3);
+                log.Info($"Face API instance: {instance}");
 
-                FaceResponse[] response = await GetEmotion(image, uri, secret, log);
+                FaceResponse[] response = await GetEmotion(image, config[$"face-endpoint{instance}"], config[$"face-key{instance}"], log);
 
                 return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
@@ -65,93 +58,6 @@ namespace ImageProcessor
                 return new BadRequestObjectResult(lowest);
             }
         }
-
-        private static async Task<string> GetSecret(string vaultUri, string secretName, IConfigurationRoot config, TraceWriter log)
-        {
-            using (HttpClient httpClient = HttpClientFactory.Create())
-            {
-                log.Info($"Looking up secret with name: {secretName} at {vaultUri}");
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {await GetVaultAccessToken(vaultUri, config, log)}");
-                HttpResponseMessage response = await httpClient.GetAsync(new Uri($"{vaultUri}secrets/{secretName}?api-version=2016-10-01"));
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    log.Error($"Request to obtain secret {secretName}");
-                    string reason = await response.Content.ReadAsStringAsync();
-                    log.Error(reason);
-                    throw new Exception($"Failed to get secret: {reason}");
-                }
-                else
-                {
-                    log.Info($"Successfully got secret: {secretName}");
-                }
-
-                dynamic result = await response.Content.ReadAsAsync<object>();
-                string secret = result?.value;
-                if (string.IsNullOrWhiteSpace(secret)) log.Error($"Failed to get value for secret : {secretName}");
-                return secret;
-            }            
-        }
-
-        private static async Task<string> GetVaultAccessToken(string resource, IConfigurationRoot config, TraceWriter log)
-        {
-            log.Info("Obtaining vault access token");
-
-            using(HttpClient httpClient = HttpClientFactory.Create())
-            {
-                string secret = config["MSI_SECRET"];
-
-                if (string.IsNullOrWhiteSpace(secret))
-                {
-                    Exception exception = new Exception("MSI_SECRET was not set");
-                    log.Error("MSI_SECRET was not set", exception);
-                    throw exception;
-                }
-                else
-                {
-                    log.Info("MSI Secret obtained");
-                }
-
-                httpClient.DefaultRequestHeaders.Add("Secret", secret);
-                Uri uri = new Uri($"{config["MSI_ENDPOINT"]}?resource=https://vault.azure.net&api-version=2017-09-01");
-
-                HttpResponseMessage response = await httpClient.GetAsync(uri);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    log.Error("Request to obtain vault token was not successful");
-                    string reason = await response.Content.ReadAsStringAsync();
-                    log.Error(reason);
-                    throw new Exception($"Failed to get vault token: {reason}");
-                }
-                else
-                {
-                    log.Info("Vault access token obtained");
-                }
-
-                try
-                {
-                    string result = await response.Content.ReadAsStringAsync();
-                    log.Info(result);
-                    dynamic item = JsonConvert.DeserializeObject(result);
-                    string token = item.access_token;
-                
-                    if(string.IsNullOrWhiteSpace(token)) 
-                    {
-                        log.Error("token could not be read");
-                        throw new Exception("token could not be read");
-                    }
-                    return token;
-                } 
-                catch(Exception exception)
-                {
-                    log.Error(exception.Message);
-                    throw exception;
-                }
-                
-            }
-        }
-
         private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
         {
             log.Info($"Attempt to check face emotion via {faceUri}");
