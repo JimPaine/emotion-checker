@@ -44,10 +44,14 @@ namespace ImageProcessor
                 log.Info("Completed building configuration");
                 
                 Random random = new Random();
-                int instance = random.Next(0, 4);
+                int faceApiInstance = int.Parse(config["face_api_instances"])+1;
+                int instance = random.Next(0, faceApiInstance);
                 log.Info($"Face API instance: {instance}");
 
-                FaceResponse[] response = await GetEmotion(image, config[$"face-endpoint{instance}"], config[$"face-key{instance}"], log);
+                string endpoint = config[$"face-endpoint"].Split(',')[instance];
+                string key = config[$"face-key"].Split(',')[instance];
+
+                FaceResponse[] response = await GetEmotion(image, endpoint, key, log);
 
                 return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }

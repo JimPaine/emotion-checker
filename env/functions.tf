@@ -33,6 +33,7 @@ resource "azurerm_function_app" "emotionfunc" {
     vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
     face-key = "${join(",", azurerm_template_deployment.emotionfunc.*.outputs["face_key"])}"
     face-endpoint = "${join(",", azurerm_template_deployment.emotionfunc.*.outputs["face_endpoint"])}"
+    face_api_instances = "${var.face_api_instances}"
   }
 
   identity {
