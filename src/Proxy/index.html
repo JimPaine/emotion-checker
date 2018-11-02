@@ -83,8 +83,8 @@
                             </div>
 
                             <div id="tempwrapper">
-                                    <canvas id="tempcanvas"></canvas>
-                                </div>
+                                <canvas id="tempcanvas"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>              
@@ -141,21 +141,21 @@
             (function loop() {
                 if (!$this.paused && !$this.ended) {
                     
-                    context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
-                    tempcontext.drawImage($this, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
-                    var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
+                    context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);                   
 
                     if(imageProcessing === false){
-                        imageProcessing = true;
-                        console.log(imageProcessing);                   
+                        tempcontext.drawImage($this, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
+                        var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
+                        imageProcessing = true;                
                         processImage(x);
-                        console.log(imageProcessing);
                     }  
                                         
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
         }, 0);
+        
+        
 
         
         if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {            
@@ -168,16 +168,24 @@
                     opt.innerHTML = device.label;
                     cameras.appendChild(opt);
                 });
-            });
-                
-            var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
+            });  
 
+            
+            cameras.addEventListener('select', function(){
+                switchDevice();
+            });  
+            
+            switchDevice();             
+        } 
+
+        function switchDevice()           {
+            var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 video.srcObject = stream;                
                 video.play();   
                 size();             
-            }); 
-        }            
+            });
+        }
         
         function processImage(x)
         {         
