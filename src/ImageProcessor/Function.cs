@@ -88,29 +88,9 @@ namespace ImageProcessor
                 if(result == null || result.Length < 1) 
                 {                    
                     return null;
-                }  
-                foreach(FaceResponse face in result)
-                {
-                    GetEmotion(face.faceAttributes.emotion);
                 }
                 return result;
             }     
-        }
-
-        private static void GetEmotion(FaceEmotion faceEmotion)
-        {
-            PropertyInfo[] properties = faceEmotion.GetType().GetProperties();
-            double high = -1;
-            string emotion = string.Empty;
-            foreach (PropertyInfo property in properties)
-            {
-                if ((double)property.GetValue(faceEmotion) > high)
-                {
-                    high = (double)property.GetValue(faceEmotion);
-                    emotion = property.Name;
-                }
-            }
-            faceEmotion.result = emotion;
         }
     }
 }
