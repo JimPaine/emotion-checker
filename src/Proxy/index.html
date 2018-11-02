@@ -167,15 +167,17 @@
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
 
                     ctx.lineWidth = 2;
-                    ctx.font = "10px Arial";
-                    ctx.strokeStyle = 'black'; 
+                    ctx.shadowBlur=10;
+                    ctx.shadowColor = "rgba(255,255,255,1)";
+                    ctx.font = "20px Arial";
+                    ctx.strokeStyle = 'blue'; 
+                    
                     ctx.beginPath();
 
                     for (i = 0; i < item.length; i++){
-                        ctx.strokeText(item[i].faceId, item[i].faceRectangle.left, item[i].faceRectangle.top-10);
                         ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);  
-                        ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
-                        ctx.strokeText(item[i].faceAttributes.emotion.result, item[i].faceRectangle.left+50, item[i].faceRectangle.top+item[i].faceRectangle.height+10);
+                        ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, item[i].faceRectangle.top+item[i].faceRectangle.height+20);
+                        ctx.strokeText(item[i].faceAttributes.emotion.result, item[i].faceRectangle.left+50, item[i].faceRectangle.top+item[i].faceRectangle.height+20);
                     }
 
                     ctx.stroke();  

@@ -90,9 +90,9 @@ namespace ImageProcessor
                 {                    
                     return null;
                 }  
-                foreach(FaceResponse face in reulst)
+                foreach(FaceResponse face in result)
                 {
-                    GetEmotion(face);
+                    GetEmotion(face.faceAttributes.emotion);
                 }
                 return result;
             }     
