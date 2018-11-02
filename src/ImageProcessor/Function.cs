@@ -61,7 +61,7 @@ namespace ImageProcessor
         {
             log.Info($"Attempt to check face emotion via {faceUri}");
 
-            image = image.Replace("data:image/png;base64,", "");
+            image = image.Replace("data:image/jpeg;base64,", "");
 
             using (HttpClient httpClient = HttpClientFactory.Create())
             using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
