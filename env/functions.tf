@@ -13,8 +13,8 @@ resource "azurerm_app_service_plan" "emotionfunc" {
   kind                = "FunctionApp"
 
   sku {
-    tier = "Dynamic"
-    size = "Y1"
+    tier = "Standard"
+    size = "S2"
   }
 }
 
