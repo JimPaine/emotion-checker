@@ -178,14 +178,14 @@
                         var y = item[i].faceRectangle.top+item[i].faceRectangle.height+20;
                         ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);  
                         ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, y);
-                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, item[i].faceRectangle.left, y);
-                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, item[i].faceRectangle.left, y);
-                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, item[i].faceRectangle.left, y);
-                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, item[i].faceRectangle.left, y);
-                        ctx.strokeText("happiness: "+item[i].faceAttributes.emotion.happiness, item[i].faceRectangle.left, y);
-                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, item[i].faceRectangle.left, y);
-                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, item[i].faceRectangle.left, y);
-                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, item[i].faceRectangle.left, y);
+                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, item[i].faceRectangle.left, y + (12 * 1));
+                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, item[i].faceRectangle.left, y  + (12 * 2));
+                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, item[i].faceRectangle.left, y + (12 * 3));
+                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, item[i].faceRectangle.left, y + (12 * 4));
+                        ctx.strokeText("happiness: "+item[i].faceAttributes.emotion.happiness, item[i].faceRectangle.left, y + (12 * 5));
+                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, item[i].faceRectangle.left, y + (12 * 6));
+                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, item[i].faceRectangle.left, y + (12 * 7));
+                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, item[i].faceRectangle.left, y + (12 * 8));
                     }
 
                     ctx.stroke();  
