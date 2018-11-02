@@ -65,7 +65,8 @@
             <div class="container">    
                 <div class="row">                  
                     <div class="col-md-12">
-                        <div class="card mb-12 shadow-sm">    
+                        <div class="card mb-12 shadow-sm">   
+                            <select id="cameras"></select> 
                             <div id="videoWrapper">
                                 <video id="video" width="100%" autoplay="true" muted="muted"></video>                                    
                             </div>   
@@ -77,6 +78,10 @@
                             <div id="faceWrapper">
                                 <canvas id="faceCanvas"></canvas>
                             </div>
+
+                            <div id="tempwrapper">
+                                    <canvas id="tempcanvas"></canvas>
+                                </div>
                         </div>
                     </div>
                 </div>              
@@ -97,8 +102,11 @@
         var video = document.getElementById('video'); 
         var videoWrapper = document.getElementById('videoWrapper');             
         var canvasWrapper = document.getElementById('canvasWrapper');           
-        var faceWrapper = document.getElementById('faceWrapper');        
-                
+        var faceWrapper = document.getElementById('faceWrapper');            
+        var tempcanvas = document.getElementById('tempcanvas'); 
+        var tempcontext = tempcanvas.getContext('2d');
+        var scaleDown = 5;
+
         function size(){
             canvas.width = video.clientWidth;
             canvas.height = video.clientHeight;                
@@ -111,6 +119,11 @@
             faceCanvas.style.width = videoWrapper.clientWidth;
             faceCanvas.style.height = videoWrapper.clientHeight;
             faceWrapper.style.marginTop = videoWrapper.clientHeight * -1 + "px";
+            
+            tempcanvas.width = video.clientWidth / scaleDown;
+            tempcanvas.height = video.clientHeight / scaleDown;                
+            tempcanvas.style.width = videoWrapper.clientWidth / scaleDown;
+            tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
         }            
 
         window.addEventListener('resize', function(){ 
@@ -124,12 +137,14 @@
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
+                    
                     context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
-                    var x = canvas.toDataURL("image/png"); 
+                    tempcontext.drawImage($this, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
+                    var x = tempcanvas.toDataURL("image/png"); 
 
                     if(imageProcessing === false){
                         imageProcessing = true;
-                        console.log(imageProcessing);                        
+                        console.log(imageProcessing);                   
                         processImage(x);
                         console.log(imageProcessing);
                     }  
@@ -139,22 +154,32 @@
             })();
         }, 0);
 
-        var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight } };
-            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                    video.srcObject = stream;                
-                    video.play();   
-                    size();             
-                });                
-            }
         
-        
-            
+        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {            
+            var cameras = document.getElementById('cameras');  
+            navigator.mediaDevices.enumerateDevices().then(function(devices) {
+                
+                devices.forEach(function(device) {                    
+                    var opt = document.createElement("option");
+                    opt.value = device.deviceId;
+                    opt.innerHTML = device.label;
+                    cameras.appendChild(opt);
+                });
+            });
+                
+            var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
+
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                video.srcObject = stream;                
+                video.play();   
+                size();             
+            }); 
+        }            
         
         function processImage(x)
         {         
             $.ajax({
-                url: "api/EmotionChecker",
+                url: "https://emotionchecker11778.azurewebsites.net/api/EmotionChecker",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
@@ -175,17 +200,18 @@
                     ctx.beginPath();
 
                     for (i = 0; i < item.length; i++){
-                        var y = item[i].faceRectangle.top+item[i].faceRectangle.height+20;
-                        ctx.rect(item[i].faceRectangle.left, item[i].faceRectangle.top, item[i].faceRectangle.width, item[i].faceRectangle.height);
-                        ctx.strokeText(item[i].faceAttributes.age, item[i].faceRectangle.left, y);
-                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, item[i].faceRectangle.left, y + (15 * 1));
-                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, item[i].faceRectangle.left, y  + (15 * 2));
-                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, item[i].faceRectangle.left, y + (15 * 3));
-                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, item[i].faceRectangle.left, y + (15 * 4));
-                        ctx.strokeText("happiness: "+item[i].faceAttributes.emotion.happiness, item[i].faceRectangle.left, y + (15 * 5));
-                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, item[i].faceRectangle.left, y + (15 * 6));
-                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, item[i].faceRectangle.left, y + (15 * 7));
-                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, item[i].faceRectangle.left, y + (15 * 8));
+                        var left = item[i].faceRectangle.left * scaleDown;
+                        var y = ((item[i].faceRectangle.top*scaleDown)+(item[i].faceRectangle.height*scaleDown))+20;
+                        ctx.rect(left, item[i].faceRectangle.top * scaleDown, item[i].faceRectangle.width * scaleDown, item[i].faceRectangle.height * scaleDown);
+                        ctx.strokeText(item[i].faceAttributes.age, left, y);
+                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, left, y + (15 * 1));
+                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, left, y  + (15 * 2));
+                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, left, y + (15 * 3));
+                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, left, y + (15 * 4));
+                        ctx.strokeText("happiness: "+item[i].faceAttributes.emotion.happiness, left, y + (15 * 5));
+                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, left, y + (15 * 6));
+                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, left, y + (15 * 7));
+                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, left, y + (15 * 8));
                     }
 
                     ctx.stroke();  
