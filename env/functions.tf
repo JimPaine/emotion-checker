@@ -31,14 +31,8 @@ resource "azurerm_function_app" "emotionfunc" {
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
     vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
-    face-key0 = "${azurerm_template_deployment.emotionfunc.outputs["face_key"]}"
-    face-endpoint0 = "${azurerm_template_deployment.emotionfunc.outputs["face_endpoint"]}"
-    face-key1 = "${azurerm_template_deployment.emotionfunc1.outputs["face_key"]}"
-    face-endpoint1 = "${azurerm_template_deployment.emotionfunc1.outputs["face_endpoint"]}"
-    face-key2 = "${azurerm_template_deployment.emotionfunc2.outputs["face_key"]}"
-    face-endpoint2 = "${azurerm_template_deployment.emotionfunc2.outputs["face_endpoint"]}"
-    face-key3 = "${azurerm_template_deployment.emotionfunc3.outputs["face_key"]}"
-    face-endpoint3 = "${azurerm_template_deployment.emotionfunc3.outputs["face_endpoint"]}"
+    face-key = "${join(",", azurerm_template_deployment.emotionfunc.*.outputs["face_key"])}"
+    face-endpoint = "${join(",", azurerm_template_deployment.emotionfunc.*.outputs["face_endpoint"])}"
   }
 
   identity {
