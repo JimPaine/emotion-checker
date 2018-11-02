@@ -44,7 +44,7 @@ namespace ImageProcessor
                 log.Info("Completed building configuration");
                 
                 Random random = new Random();
-                int instance = random.Next(0,3);
+                int instance = random.Next(0, 4);
                 log.Info($"Face API instance: {instance}");
 
                 FaceResponse[] response = await GetEmotion(image, config[$"face-endpoint{instance}"], config[$"face-key{instance}"], log);
