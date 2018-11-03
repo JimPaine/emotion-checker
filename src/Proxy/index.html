@@ -161,11 +161,14 @@
             var cameras = document.getElementById('cameras');  
             navigator.mediaDevices.enumerateDevices().then(function(devices) {
                 
-                devices.forEach(function(device) {           
-                    var opt = document.createElement("option");
-                    opt.value = device.deviceId;
-                    opt.innerHTML = device.label;
-                    cameras.appendChild(opt);
+                devices.forEach(function(device) {  
+                    //if(device.kind=="videoinput")
+                    //{
+                        var opt = document.createElement("option");
+                        opt.value = device.deviceId;
+                        opt.innerHTML = device.kind + ": " + device.label + device.deviceId;
+                        cameras.appendChild(opt);
+                    //} 
                 });
             });  
 
