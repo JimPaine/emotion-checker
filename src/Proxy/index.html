@@ -68,8 +68,15 @@
             <div class="container">    
                 <div class="row">                  
                     <div class="col-md-12">
-                        <div class="card mb-12 shadow-sm">   
-                            <select id="cameras"></select> 
+                        <div class="card mb-12 shadow-sm">  
+                            <div id="formWrapper">
+                                <select id="cameras"></select> 
+                                <form id="captureForm" action="processImage">
+                                    <input type="file" name="image" accept="image/jpeg" capture="user">
+                                    <input type="submit" value="Upload">
+                                  </form>
+                            </div> 
+                            
                             <div id="videoWrapper">
                                 <video id="video" width="100%" autoplay="true" muted="muted"></video>                                    
                             </div>   
@@ -153,12 +160,12 @@
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
             })();
-        }, 0);
-        
-        
+        }, 0);     
 
         
-        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {            
+        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {    
+            var captureForm = document.getElementById('captureForm');
+            captureForm.style.display = "none";        
             var cameras = document.getElementById('cameras');  
             navigator.mediaDevices.enumerateDevices().then(function(devices) {
                 
@@ -176,9 +183,16 @@
             });  
             
             switchDevice();             
-        } 
+        } else {
+            var cameras = document.getElementById('cameras');
+            cameras.style.display = "none";
+            
+            // handle stuff for iphone here, probably add a button to the view for image capture
+            // doing single image at a time
+            // formWrapper
+        }
 
-        function switchDevice()           {
+        function switchDevice() {
             var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                 video.srcObject = stream;                
