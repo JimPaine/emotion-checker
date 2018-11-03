@@ -196,8 +196,10 @@
         }
 
         function switchDevice() {
+            alert('iphone test 5');
             var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                alert('iphone test 6');
                 video.srcObject = stream;                
                 video.play();   
                 size();             
