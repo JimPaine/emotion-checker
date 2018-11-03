@@ -69,13 +69,7 @@
                 <div class="row">                  
                     <div class="col-md-12">
                         <div class="card mb-12 shadow-sm">  
-                            <select id="cameras"></select> 
-                            <div id="formWrapper">                                
-                                <form id="captureForm" action="processImage">
-                                    <input type="file" name="image" accept="image/jpeg" capture="user">
-                                    <input type="submit" value="Upload">
-                                  </form>
-                            </div> 
+                            <select id="cameras"></select>
                             
                             <div id="videoWrapper">
                                 <video id="video" width="100%" autoplay="true" muted="muted"></video>                                    
@@ -163,15 +157,11 @@
         }, 0);     
 
         
-        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {    
-            alert('iphone test 0');
-            var captureForm = document.getElementById('captureForm');
-            captureForm.style.display = "none";        
+        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) { 
             var cameras = document.getElementById('cameras');  
             navigator.mediaDevices.enumerateDevices().then(function(devices) {
-                alert('iphone test 1');
-                devices.forEach(function(device) {     
-                    alert('iphone test 2');               
+                
+                devices.forEach(function(device) {           
                     var opt = document.createElement("option");
                     opt.value = device.deviceId;
                     opt.innerHTML = device.label;
@@ -185,25 +175,25 @@
             });  
             
             switchDevice();             
-        } else {
-            alert('iphone test 4');
-            var cameras = document.getElementById('cameras');
-            cameras.style.display = "none";
-            
-            // handle stuff for iphone here, probably add a button to the view for image capture
-            // doing single image at a time
-            // formWrapper
         }
 
         function switchDevice() {
-            alert('iphone test 5');
             var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
-            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                alert('iphone test 6');
-                video.srcObject = stream;                
-                video.play();   
-                size();             
-            });
+            if(navigator.mediaDevices.getUserMedia){
+                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {                
+                    video.srcObject = stream;                
+                    video.play();   
+                    size();             
+                });
+            }else{
+                navigator.getUserMedia(constraints, function(stream) {                
+                    video.srcObject = stream;                
+                    video.play();   
+                    size();             
+                }, function(error){
+                    console.error(error);
+                });
+            }            
         }
         
         function processImage(x)
