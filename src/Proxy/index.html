@@ -181,7 +181,7 @@
         }
 
         function switchDevice() {
-            var constraints = { audio: true,  video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
+            var constraints = { audio: true,  video: true, deviceId: { exact: cameras.value} };
             if(navigator.mediaDevices.getUserMedia){
                 navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {                
                     video.srcObject = stream;                
