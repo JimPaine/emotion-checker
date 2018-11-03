@@ -180,22 +180,14 @@
         function switchDevice() {
             var constraints = { video: { width: videoWrapper.clientWidth, height: videoWrapper.clientHeight}, deviceId: { exact: cameras.value} };
             if(navigator.mediaDevices.getUserMedia){
-                alert('iphone 0');
                 navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {                
                     video.srcObject = stream;                
-                    video.play();   
+                    video.onloadedmetadata = function(e) {
+                            video.play();
+                        };  
                     size();             
                 });
-            }else{
-                alert('iphone 1');
-                navigator.getUserMedia(constraints, function(stream) {                
-                    video.srcObject = stream;                
-                    video.play();   
-                    size();             
-                }, function(error){
-                    console.error(error);
-                });
-            }            
+            }          
         }
         
         function processImage(x)
