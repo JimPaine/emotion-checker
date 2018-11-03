@@ -69,8 +69,8 @@
                 <div class="row">                  
                     <div class="col-md-12">
                         <div class="card mb-12 shadow-sm">  
-                            <div id="formWrapper">
-                                <select id="cameras"></select> 
+                            <select id="cameras"></select> 
+                            <div id="formWrapper">                                
                                 <form id="captureForm" action="processImage">
                                     <input type="file" name="image" accept="image/jpeg" capture="user">
                                     <input type="submit" value="Upload">
@@ -164,12 +164,14 @@
 
         
         if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {    
+            alert('iphone test 0');
             var captureForm = document.getElementById('captureForm');
             captureForm.style.display = "none";        
             var cameras = document.getElementById('cameras');  
             navigator.mediaDevices.enumerateDevices().then(function(devices) {
-                
-                devices.forEach(function(device) {                    
+                alert('iphone test 1');
+                devices.forEach(function(device) {     
+                    alert('iphone test 2');               
                     var opt = document.createElement("option");
                     opt.value = device.deviceId;
                     opt.innerHTML = device.label;
@@ -184,6 +186,7 @@
             
             switchDevice();             
         } else {
+            alert('iphone test 4');
             var cameras = document.getElementById('cameras');
             cameras.style.display = "none";
             
