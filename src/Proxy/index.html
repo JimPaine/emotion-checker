@@ -185,7 +185,7 @@
             var constraints = { video: true };
             if(navigator.mediaDevices.getUserMedia){
                 navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {     
-                   alert(navigator.mediaDevices.getSupportedConstraints());
+                   
                     video.srcObject = stream;                
                     video.onloadedmetadata = function(e) {
                             video.play();
