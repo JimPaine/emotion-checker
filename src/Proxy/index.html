@@ -182,7 +182,7 @@
         }
 
         function switchDevice() {
-            var constraints = { video: true, deviceId: { exact: cameras.value} };
+            var constraints = { video: true };
             if(navigator.mediaDevices.getUserMedia){
                 navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {                
                     video.srcObject = stream;                
