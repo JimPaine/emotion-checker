@@ -70,6 +70,7 @@
                 <div class="row">                  
                     <div class="col-md-12">
                         <div class="card mb-12 shadow-sm">  
+                           <button id="playButton">play</button>
                             <select id="cameras"></select>
                             
                             <div id="videoWrapper">
@@ -134,6 +135,10 @@
         window.addEventListener('resize', function(){ 
             size();
         });      
+       
+       playButton.addEventListener('click', function(){
+          video.play();
+          });
 
         var imageProcessing = false;
 
