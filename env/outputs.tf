@@ -40,3 +40,7 @@ output "function_principal_id" {
 output "resource_group" {
   value = "${azurerm_resource_group.emotionfunc.name}"
 }
+
+output "test" {
+  value = "${azurerm_template_deployment.emotionfunc.*.outputs.["face_key"]}"
+}

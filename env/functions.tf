@@ -18,11 +18,6 @@ resource "azurerm_app_service_plan" "emotionfunc" {
   }
 }
 
-locals {
-  face_keys = ["${azurerm_template_deployment.emotionfunc.*.outputs.face_key}"]
-  face_endpoints = ["${azurerm_template_deployment.emotionfunc.*.outputs.face_endpoint}"]
-}
-
 resource "azurerm_function_app" "emotionfunc" {
   name                      = "${var.resource_name}${random_id.emotionfunc.dec}"
   location                  = "${azurerm_resource_group.emotionfunc.location}"
@@ -36,8 +31,8 @@ resource "azurerm_function_app" "emotionfunc" {
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
     vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
-    face-key = "${join(",", local.face_keys)}"
-    face-endpoint = "${join(",", local.face_endpoints)}"
+    face-key = "${azurerm_template_deployment.emotionfunc.*.outputs.["face_key"]}"
+    face-endpoint = "${azurerm_template_deployment.emotionfunc.*.outputs.["face_endpoint"]}"
     face_api_instances = "${var.face_api_instances}"
   }
 
