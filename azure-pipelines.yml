@@ -5,7 +5,7 @@ queue:
 variables:
   tfstate_key: 'jimpaine.emotion-checker.master.tfstate'
   resource_name: 'poldemo'
-  face_api_instances: '3'
+  face_api_instances: '4'
   
 steps:
 
