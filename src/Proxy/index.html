@@ -133,7 +133,11 @@
             tempcanvas.height = video.clientHeight / scaleDown;                
             tempcanvas.style.width = videoWrapper.clientWidth / scaleDown;
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
-        }   
+        }  
+
+        $(document).ready(function(){
+           size();
+        });
 
         window.addEventListener('load', function(){ 
             size();
