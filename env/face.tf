@@ -2,8 +2,6 @@ resource "azurerm_template_deployment" "emotionfunc" {
   name                = "facearm"
   resource_group_name = "${azurerm_resource_group.emotionfunc.name}"
 
-  count = "${var.face_api_instances}"
-
   template_body = <<DEPLOY
 {
     "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
@@ -49,7 +47,7 @@ resource "azurerm_template_deployment" "emotionfunc" {
   DEPLOY
 
   parameters {
-    "name"     = "face${count.index}${random_id.emotionfunc.dec}"
+    "name"     = "face${random_id.emotionfunc.dec}"
     "location" = "${azurerm_resource_group.emotionfunc.location}"
     "apiType"  = "Face"
     "sku"      = "S0"
