@@ -19,8 +19,8 @@ resource "azurerm_app_service_plan" "emotionfunc" {
 }
 
 locals {
-  face_keys = ["${azurerm_template_deployment.emotionfunc.*.outputs["face_key"]"]
-  face_endpoints = ["${azurerm_template_deployment.emotionfunc.*.outputs["face_endpoint"]"]
+  face_keys = ["${azurerm_template_deployment.emotionfunc.*.outputs.face_key}"]
+  face_endpoints = ["${azurerm_template_deployment.emotionfunc.*.outputs.face_endpoint}"]
 }
 
 resource "azurerm_function_app" "emotionfunc" {
