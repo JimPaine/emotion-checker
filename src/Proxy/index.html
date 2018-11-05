@@ -135,6 +135,22 @@
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
         }  
 
+        function loop() {
+                if (!video.paused && !video.ended) {
+                    
+                    context.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);                   
+
+                    if(imageProcessing === false){
+                        tempcontext.drawImage(video, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
+                        var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
+                        imageProcessing = true;                
+                        processImage(x);
+                    }  
+                                        
+                    setTimeout(loop, 1000 / 30); // drawing at 30fps
+                }
+            }
+
         $(document).ready(function(){
            size();
         });
@@ -163,24 +179,7 @@
                     dirtyflag = true;
                     loop();
                 }
-        });   
-
-
-        function loop() {
-                if (!video.paused && !video.ended) {
-                    
-                    context.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);                   
-
-                    if(imageProcessing === false){
-                        tempcontext.drawImage(video, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
-                        var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
-                        imageProcessing = true;                
-                        processImage(x);
-                    }  
-                                        
-                    setTimeout(loop, 1000 / 30); // drawing at 30fps
-                }
-            } 
+        });           
 
         
         if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) { 
