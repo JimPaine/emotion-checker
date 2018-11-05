@@ -17,6 +17,9 @@
        #tempcanvas {
            display:none;
        }
+       #cameras {
+           display: none;
+       }
    </style>
 </head>
 <body>
@@ -70,7 +73,7 @@
                 <div class="row">                  
                     <div class="col-md-12">
                         <div class="card mb-12 shadow-sm">  
-                           <button id="playButton">play</button>
+                           <button id="playButton">Start</button>
                             <select id="cameras"></select>
                             
                             <div id="videoWrapper">
@@ -130,7 +133,9 @@
             tempcanvas.height = video.clientHeight / scaleDown;                
             tempcanvas.style.width = videoWrapper.clientWidth / scaleDown;
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
-        }            
+        }   
+
+        size();         
 
         window.addEventListener('resize', function(){ 
             size();
@@ -144,6 +149,8 @@
 
         video.addEventListener('play', function () {
             var $this = this; //cache
+            var playButton = document.getElementById('playButton');
+            playButton.style.display = none;
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
@@ -205,7 +212,7 @@
         function processImage(x)
         {         
             $.ajax({
-                url: "https://emotionchecker11778.azurewebsites.net/api/EmotionChecker",
+                url: "api/EmotionChecker",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
