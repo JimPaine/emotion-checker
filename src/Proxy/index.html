@@ -149,8 +149,6 @@
 
         video.addEventListener('play', function () {
             var $this = this; //cache
-            var playButton = document.getElementById('playButton');
-            playButton.style.display = none;
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
