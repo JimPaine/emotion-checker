@@ -5,7 +5,6 @@ queue:
 variables:
   tfstate_key: 'jimpaine.emotion-checker.master.tfstate'
   resource_name: 'emotionchecker'
-  face_api_instances: '5'
   
 steps:
 
@@ -27,8 +26,7 @@ steps:
        -var "resource_name=$(resource_name)" \
        -var "client_id=$(client_id)" \
        -var "client_secret=$(client_secret)" \
-       -var "tenant_id=$(tenant_id)" \
-       -var "face_api_instances=$(face_api_instances)"
+       -var "tenant_id=$(tenant_id)"
 
   workingDirectory: ./env
   displayName: 'Terraform apply'

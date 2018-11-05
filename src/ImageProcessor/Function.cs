@@ -36,13 +36,8 @@ namespace ImageProcessor
                     .Build();
                 log.Info("Completed building configuration");
                 
-                Random random = new Random();
-                int faceApiInstance = int.Parse(config["face_api_instances"])+1;
-                int instance = random.Next(0, faceApiInstance);
-                log.Info($"Face API instance: {instance}");
-
-                string endpoint = config[$"face-endpoint"].Split(',')[instance];
-                string key = config[$"face-key"].Split(',')[instance];
+                string endpoint = config[$"face-endpoint"];
+                string key = config[$"face-key"];
 
                 FaceResponse[] response = await GetEmotion(image, endpoint, key, log);
 
