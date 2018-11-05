@@ -135,7 +135,9 @@
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
         }   
 
-        size();         
+        window.addEventListener('load', function(){ 
+            size();
+        });            
 
         window.addEventListener('resize', function(){ 
             size();
