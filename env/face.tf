@@ -2,7 +2,7 @@ resource "azurerm_template_deployment" "emotionfunc" {
   name                = "facearm"
   resource_group_name = "${azurerm_resource_group.emotionfunc.name}"
 
-  count = "${var.face_api_instances}"
+ // count = "${var.face_api_instances}"
 
   template_body = <<DEPLOY
 {
