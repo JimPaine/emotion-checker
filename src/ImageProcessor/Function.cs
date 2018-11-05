@@ -17,13 +17,6 @@ namespace ImageProcessor
 {
     public static class Function
     {
-        [FunctionName("GetSignalRInfo")]
-        public static SignalRConnectionInfo GetSignalRInfo(
-            [HttpTrigger(AuthorizationLevel.Anonymous)]HttpRequest req, 
-            [SignalRConnectionInfo(HubName = "face")]SignalRConnectionInfo connectionInfo)
-        {
-            return connectionInfo;
-        }
 
         [FunctionName("EmotionChecker")]        
         public static async Task<IActionResult> Check(
