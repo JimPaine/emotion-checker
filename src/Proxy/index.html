@@ -147,22 +147,32 @@
             size();
         });      
        
+       var dirtyflag = false;
        playButton.addEventListener('click', function(){
           video.play();
+          if(!dirtyflag){
+                    dirtyflag = true;
+                    loop();
+                }
           });
 
         var imageProcessing = false;
 
         video.addEventListener('play', function () {
-            var $this = this; //cache
+                if(!dirtyflag){
+                    dirtyflag = true;
+                    loop();
+                }
+        });   
 
-            (function loop() {
-                if (!$this.paused && !$this.ended) {
+
+        function loop() {
+                if (!video.paused && !video.ended) {
                     
-                    context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);                   
+                    context.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);                   
 
                     if(imageProcessing === false){
-                        tempcontext.drawImage($this, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
+                        tempcontext.drawImage(video, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
                         var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
                         imageProcessing = true;                
                         processImage(x);
@@ -170,8 +180,7 @@
                                         
                     setTimeout(loop, 1000 / 30); // drawing at 30fps
                 }
-            })();
-        }, 0);     
+            } 
 
         
         if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) { 
@@ -204,7 +213,10 @@
                    
                     video.srcObject = stream;                
                     video.onloadedmetadata = function(e) {
-                            video.play();
+                            if(!dirtyflag){
+                                dirtyflag=true;
+                                video.play();
+                            }                            
                         };  
                     size();             
                 }).catch(function(exception){
