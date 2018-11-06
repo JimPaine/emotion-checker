@@ -17,9 +17,6 @@
        #tempcanvas {
            display:none;
        }
-       #cameras {
-           display: none;
-       }
    </style>
 </head>
 <body>
@@ -74,7 +71,6 @@
                     <div class="col-md-12">
                         <div class="card mb-12 shadow-sm">  
                            <button id="playButton">Start</button>
-                            <select id="cameras"></select>
                             
                             <div id="videoWrapper">
                                 <video id="video" width="100%" autoplay="true" muted="muted" playsinline> </video>                                   
@@ -86,17 +82,16 @@
 
                             <div id="faceWrapper">
                                 <canvas id="faceCanvas"></canvas>
-                            </div>
-
-                            <div id="tempwrapper">
-                                <canvas id="tempcanvas"></canvas>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                 </div>              
             </div> 
         </div>
     </main>
+    <div id="tempwrapper">
+        <canvas id="tempcanvas"></canvas>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.2.min.js"></script>
@@ -133,28 +128,23 @@
             tempcanvas.height = video.clientHeight / scaleDown;                
             tempcanvas.style.width = videoWrapper.clientWidth / scaleDown;
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
-        }  
-
-        $(document).ready(function(){
-           size();
-        });
-
-        window.addEventListener('load', function(){ 
-            size();
-        });            
+        } 
 
         window.addEventListener('resize', function(){ 
             size();
         });      
        
-       playButton.addEventListener('click', function(){
+        playButton.addEventListener('click', function(){
           video.play();
-          });
+        });
 
         var imageProcessing = false;
 
         video.addEventListener('play', function () {
             var $this = this; //cache
+
+            size();
+            document.getElementById('playButton').style.display = "none";
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
@@ -174,49 +164,23 @@
         }, 0);     
 
         
-        if(navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) { 
-            var cameras = document.getElementById('cameras');  
-            navigator.mediaDevices.enumerateDevices().then(function(devices) {
-                
-                devices.forEach(function(device) {  
-                    if(device.kind=="videoinput")
-                    {
-                        var opt = document.createElement("option");
-                        opt.value = device.deviceId;
-                        opt.innerHTML = device.kind + ": " + device.label + device.deviceId;
-                        cameras.appendChild(opt);
-                    } 
-                });
-            });  
-
-            
-            cameras.addEventListener('change', function(){
-                switchDevice();
-            });  
-            
-            switchDevice();             
-        }
-
-        function switchDevice() {
-            var constraints = { video: true };
-            if(navigator.mediaDevices.getUserMedia){
-                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {     
-                   
-                    video.srcObject = stream;                
-                    video.onloadedmetadata = function(e) {
-                            video.play();
-                        };  
-                    size();             
-                }).catch(function(exception){
-                    alert(exception);
-                });
-            }          
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { 
+            var constraints = { video: { facingMode: "user" } };
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                   video.srcObject = stream;                
+                   video.onloadedmetadata = function(e) {
+                           video.play();
+                       };  
+                   size();             
+               }).catch(function(exception){
+                   alert(exception);
+               });           
         }
         
         function processImage(x)
         {         
             $.ajax({
-                url: "api/EmotionChecker",
+                url: "https://emotionchecker34133.azurewebsites.net/api/EmotionChecker",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
