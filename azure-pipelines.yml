@@ -83,6 +83,12 @@ steps:
        --name "index.html" \
        --connection-string $connectionstring
    
+    az storage blob upload \
+       --container-name "proxy" \
+       --file ../src/Proxy/jquery-3.3.1.min.js \
+       --name "jquery-3.3.1.min.js" \
+       --connection-string $connectionstring
+
    az functionapp start \
        --name $functionname \
        --resource-group $resourcegroup 
