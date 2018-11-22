@@ -31,8 +31,6 @@ resource "azurerm_function_app" "emotionfunc" {
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
     vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
-    face-key = "${azurerm_template_deployment.emotionfunc.outputs["face_key"]}"
-    face-endpoint = "${azurerm_template_deployment.emotionfunc.outputs["face_endpoint"]}"
   }
 
   identity {
