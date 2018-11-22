@@ -23,28 +23,28 @@ namespace ImageProcessor
 
         [FunctionName("EmotionChecker")]        
         public static async Task<IActionResult> Check(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, ILogger log, ExecutionContext context)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, TraceWriter log, ExecutionContext context)
         {
-            log.Log(LogLevel.Information, "Processing request");
+            log.Info("Processing request");
 
             string image = await request.ReadAsStringAsync();
             
             try
             {
-                log.Log(LogLevel.Information, "Building configuration");
+                log.Info("Building configuration");
                 IConfigurationRoot config = new ConfigurationBuilder()
                     .SetBasePath(context.FunctionAppDirectory)
                     .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables()
                     .Build();
-                log.Log(LogLevel.Information, "Completed building configuration");                
+                log.Info("Completed building configuration");                
 
                 AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
                 KeyVaultClient keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
                 string vaultUri = config[$"vault_uri"];
 
-                string endpoint = await GetSecret(keyVaultClient, vaultUri, "face-endpoint");
-                string key = await GetSecret(keyVaultClient, vaultUri, "face-key");
+                string endpoint = await GetSecret(keyVaultClient, vaultUri, "face-endpoint", log);
+                string key = await GetSecret(keyVaultClient, vaultUri, "face-key", log);
 
                 FaceResponse[] response = await GetEmotion(image, endpoint, key, log);
 
@@ -52,20 +52,28 @@ namespace ImageProcessor
             }
             catch (Exception exception)
             {
-                log.Log(LogLevel.Error, "Failed processing image", exception);
+                log.Error("Failed processing image", exception);
                 return new BadRequestObjectResult(exception);
             }
         }
 
-        private static async Task<string> GetSecret(KeyVaultClient client, string uri, string key)
+        private static async Task<string> GetSecret(KeyVaultClient client, string uri, string key, TraceWriter log)
         {
-            SecretBundle bundle = await client.GetSecretAsync(uri, key);
-            return bundle.Value;
+            try
+            {
+                SecretBundle bundle = await client.GetSecretAsync(uri, key);
+                return bundle.Value;
+            }
+            catch(Exception exception)
+            {
+                log.Error("Failed processing image", exception);
+                throw exception;
+            }            
         }
 
-        private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, ILogger log)
+        private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
         {
-            log.Log(LogLevel.Information, $"Attempt to check face emotion via {faceUri}");
+            log.Info($"Attempt to check face emotion via {faceUri}");
 
             image = image.Replace("data:image/jpeg;base64,", "");
 
@@ -81,13 +89,13 @@ namespace ImageProcessor
                 
                 if (!response.IsSuccessStatusCode)
                 {
-                    log.Log(LogLevel.Error, "Request to emotion was not successful");
+                    log.Error("Request to emotion was not successful");
                     string reason = await response.Content.ReadAsStringAsync();
-                    log.Log(LogLevel.Error, reason);
+                    log.Error(reason);
                     throw new Exception($"Failed to get emotion: {reason} using uri {faceUri}");
                 }
                 
-                log.Log(LogLevel.Information, "Emotion obtained");
+                log.Info("Emotion obtained");
                 
                 FaceResponse[] result = await response.Content.ReadAsAsync<FaceResponse[]>();     
 
