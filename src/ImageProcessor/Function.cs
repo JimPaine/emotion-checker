@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
@@ -25,6 +24,7 @@ namespace ImageProcessor
 {
     public static class Function
     {
+
         [FunctionName("EmotionChecker")]        
         public static async Task<IActionResult> Check(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, TraceWriter log, ExecutionContext context)
@@ -43,10 +43,7 @@ namespace ImageProcessor
                 string endpoint = await GetSecret(keyVaultClient, vaultUri, "face-endpoint", log);
                 string key = await GetSecret(keyVaultClient, vaultUri, "face-key", log);
 
-                FaceClient faceClient = new FaceClient(new ApiKeyServiceClientCredentials(key));
-                faceClient.Endpoint = endpoint;
-
-                IList<DetectedFace> response = await GetEmotion(faceClient, image, log);
+                IList<DetectedFace> response = await GetEmotion(image, endpoint, key, log);
 
                 return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
@@ -78,15 +75,41 @@ namespace ImageProcessor
             return config;
         }
 
-        private static async Task<IList<DetectedFace>> GetEmotion(FaceClient faceClient, string image, TraceWriter log)
+        private static async Task<IList<DetectedFace>> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
         {
-            FaceAttributeType[] faceAttributes = { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
+            log.Info($"Attempt to check face emotion via {faceUri}");
 
-            using(Stream stream = new MemoryStream(Convert.FromBase64String(image)))
+            image = image.Replace("data:image/jpeg;base64,", "");
+
+            using (HttpClient httpClient = HttpClientFactory.Create())
+            using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
             {
-                stream.Position = 0;
-                return await faceClient.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
-            }            
+                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", secret);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                HttpResponseMessage response = await httpClient.PostAsync(
+                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion,gender"), content);                
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    log.Error("Request to emotion was not successful");
+                    string reason = await response.Content.ReadAsStringAsync();
+                    log.Error(reason);
+                    throw new Exception($"Failed to get emotion: {reason} using uri {faceUri}");
+                }               
+
+                log.Info("Emotion obtained");               
+
+                IList<DetectedFace> result = await response.Content.ReadAsAsync<IList<DetectedFace>>();     
+
+                if(result == null || !result.Any()) 
+                {                    
+                    return null;
+                }
+
+                return result;
+            }     
+
         }
     }
 }
