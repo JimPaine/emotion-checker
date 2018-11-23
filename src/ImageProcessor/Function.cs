@@ -1,11 +1,16 @@
-using ImageProcessor.models;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.CognitiveServices.Vision.Face;
+using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.KeyVault.Models;
@@ -27,26 +32,22 @@ namespace ImageProcessor
         {
             log.Info("Processing request");
 
-            string image = await request.ReadAsStringAsync();
-            
+            IConfigurationRoot config = GetConfiguration(context, log);
+            AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
+            KeyVaultClient keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));  
+           
             try
-            {
-                log.Info("Building configuration");
-                IConfigurationRoot config = new ConfigurationBuilder()
-                    .SetBasePath(context.FunctionAppDirectory)
-                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables()
-                    .Build();
-                log.Info("Completed building configuration");                
-
-                AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
-                KeyVaultClient keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            {                                
+                string image = await request.ReadAsStringAsync();
                 string vaultUri = config[$"vault_uri"];
 
                 string endpoint = await GetSecret(keyVaultClient, vaultUri, "face-endpoint", log);
                 string key = await GetSecret(keyVaultClient, vaultUri, "face-key", log);
 
-                FaceResponse[] response = await GetEmotion(image, endpoint, key, log);
+                FaceClient faceClient = new FaceClient(new ApiKeyServiceClientCredentials(key));
+                faceClient.Endpoint = endpoint;
+
+                IList<DetectedFace> response = await GetEmotion(faceClient, image, log);
 
                 return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
@@ -59,52 +60,35 @@ namespace ImageProcessor
 
         private static async Task<string> GetSecret(KeyVaultClient client, string uri, string key, TraceWriter log)
         {
-            try
-            {
-                SecretBundle bundle = await client.GetSecretAsync(uri, key);
-                return bundle.Value;
-            }
-            catch(Exception exception)
-            {
-                log.Error("Failed processing image", exception);
-                throw exception;
-            }            
+            SecretBundle bundle = await client.GetSecretAsync(uri, key);
+            return bundle.Value;         
         }
 
-        private static async Task<FaceResponse[]> GetEmotion(string image, string faceUri, string secret, TraceWriter log)
+        private static IConfigurationRoot GetConfiguration(ExecutionContext context, TraceWriter log)
         {
-            log.Info($"Attempt to check face emotion via {faceUri}");
+            log.Info("Building configuration");
 
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .SetBasePath(context.FunctionAppDirectory)
+                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            log.Info("Completed building configuration");
+
+            return config;
+        }
+
+        private static async Task<IList<DetectedFace>> GetEmotion(FaceClient faceClient, string image, TraceWriter log)
+        {
+            FaceAttributeType[] faceAttributes = { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
             image = image.Replace("data:image/jpeg;base64,", "");
 
-            using (HttpClient httpClient = HttpClientFactory.Create())
-            using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
+            using(Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(image)))
             {
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", secret);
-
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                HttpResponseMessage response = await httpClient.PostAsync(
-                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion,gender"), content);
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    log.Error("Request to emotion was not successful");
-                    string reason = await response.Content.ReadAsStringAsync();
-                    log.Error(reason);
-                    throw new Exception($"Failed to get emotion: {reason} using uri {faceUri}");
-                }
-                
-                log.Info("Emotion obtained");
-                
-                FaceResponse[] result = await response.Content.ReadAsAsync<FaceResponse[]>();     
-
-                if(result == null || result.Length < 1) 
-                {                    
-                    return null;
-                }
-                return result;
-            }     
+                stream.Position = 0;
+                return await faceClient.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
+            }            
         }
     }
 }
