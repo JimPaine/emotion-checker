@@ -25,7 +25,6 @@ namespace ImageProcessor
 {
     public static class Function
     {
-
         [FunctionName("EmotionChecker")]        
         public static async Task<IActionResult> Check(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, TraceWriter log, ExecutionContext context)
@@ -82,7 +81,7 @@ namespace ImageProcessor
         private static async Task<IList<DetectedFace>> GetEmotion(FaceClient faceClient, string image, TraceWriter log)
         {
             FaceAttributeType[] faceAttributes = { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
-            image = image.Replace("data:image/jpeg;base64,", "");
+            //image = image.Replace("data:image/jpeg;base64,", "");
 
             using(Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(image)))
             {
