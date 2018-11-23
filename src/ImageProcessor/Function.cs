@@ -81,9 +81,8 @@ namespace ImageProcessor
         private static async Task<IList<DetectedFace>> GetEmotion(FaceClient faceClient, string image, TraceWriter log)
         {
             FaceAttributeType[] faceAttributes = { FaceAttributeType.Age, FaceAttributeType.Gender, FaceAttributeType.Emotion };
-            //image = image.Replace("data:image/jpeg;base64,", "");
 
-            using(Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(image)))
+            using(Stream stream = new MemoryStream(Convert.FromBase64String(image)))
             {
                 stream.Position = 0;
                 return await faceClient.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
