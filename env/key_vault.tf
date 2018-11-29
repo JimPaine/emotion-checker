@@ -23,18 +23,21 @@ resource "azurerm_key_vault" "emotionfunc" {
       "get",
     ]
   }
+}
 
-  access_policy {
-    tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
-    object_id = "${azurerm_function_app.emotionfunc.identity.0.principal_id}"
+resource "azurerm_key_vault_access_policy" "functionmsi" {
+  vault_name          = "${azurerm_key_vault.emotionfunc.name}"
+  resource_group_name = "${azurerm_key_vault.emotionfunc.resource_group_name}"
 
-    key_permissions = []
+  tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
+  object_id = "${azurerm_function_app.emotionfunc.identity.0.principal_id}"
 
-    secret_permissions = [
-      "get",
-      "list",
-    ]
-  }
+  key_permissions = []
+
+  secret_permissions = [
+    "get",
+    "list",
+  ]
 }
 
 resource "azurerm_key_vault_secret" "emotionfunc-face-key" {

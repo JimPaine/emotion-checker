@@ -29,9 +29,8 @@ resource "azurerm_function_app" "emotionfunc" {
 
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
-    # build out key vault uris manually do to circular reference
-    face-key = "@Microsoft.KeyVault(SecretUri={https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/secrets/face-key}})"
-    face-endpoint = "@Microsoft.KeyVault(SecretUri={https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/secrets/face-endpoint})"
+    face-key = "@Microsoft.KeyVault(SecretUri={${azurerm_key_vault.emotionfunc.vault_uri}/secrets/${azurerm_key_vault_secret.emotionfunc-face-key}})"
+    face-endpoint = "@Microsoft.KeyVault(SecretUri={${azurerm_key_vault.emotionfunc.vault_uri}/secrets/${azurerm_key_vault_secret.emotionfunc-face-endpoint}})"
   }
 
   identity {
