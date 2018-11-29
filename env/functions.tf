@@ -24,13 +24,14 @@ resource "azurerm_function_app" "emotionfunc" {
   resource_group_name       = "${azurerm_resource_group.emotionfunc.name}"
   app_service_plan_id       = "${azurerm_app_service_plan.emotionfunc.id}"
   storage_connection_string = "${azurerm_storage_account.emotionfunc.primary_connection_string}"
-
-  # looks like at the moment for v2 http version has to be http1.1 and app has to be 32bit
+  
   version = "~2"
 
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
-    vault_uri = "https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/"
+    # build out key vault uris manually do to circular reference
+    face-key = "@Microsoft.KeyVault(SecretUri={https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/secrets/face-key}})"
+    face-endpoint = "@Microsoft.KeyVault(SecretUri={https://${var.resource_name}${random_id.emotionfunc.dec}vault.vault.azure.net/secrets/face-endpoint})"
   }
 
   identity {
