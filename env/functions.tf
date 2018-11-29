@@ -29,8 +29,8 @@ resource "azurerm_function_app" "emotionfunc" {
 
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
-    face-key = "@Microsoft.KeyVault(SecretUri={${azurerm_key_vault_secret.emotionfunc-face-key.id}})"
-    face-endpoint = "@Microsoft.KeyVault(SecretUri={${azurerm_key_vault_secret.emotionfunc-face-endpoint.id}})"
+    face-key = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.emotionfunc-face-key.id})"
+    face-endpoint = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.emotionfunc-face-endpoint.id})"
   }
 
   identity {
