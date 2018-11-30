@@ -7,22 +7,22 @@ resource "azurerm_key_vault" "emotionfunc" {
   sku {
     name = "standard"
   }
+}
 
-  access_policy {
-    tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
+resource "azurerm_key_vault_access_policy" "terraformclient" {
+  vault_name          = "${azurerm_key_vault.emotionfunc.name}"
+  resource_group_name = "${azurerm_key_vault.emotionfunc.resource_group_name}"
 
-    # known bug need to run as service principal
-    # https://github.com/terraform-providers/terraform-provider-azurerm/issues/656
-    object_id = "${data.azurerm_client_config.emotionfunc.service_principal_object_id}"
+  tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
+  object_id = "${data.azurerm_client_config.emotionfunc.service_principal_object_id}"
 
-    key_permissions = []
+  key_permissions = []
 
-    secret_permissions = [
+  secret_permissions = [
       "list",
       "set",
       "get",
     ]
-  }
 }
 
 resource "azurerm_key_vault_access_policy" "functionmsi" {
