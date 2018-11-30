@@ -92,10 +92,6 @@ Then I wanted to show / learn how an Azure Function App could have a [managed se
 
 ## Things to keep an eye out for
 
-Azure Function v2 kept blowing up when using dependencies of anything lower than .net standard 2.0 so Key Vault, Managed Service Identity and Face API are all consumed using the HTTP Client
-
-You will first need to setup a service principle you can use to run the scripts, while this is a little fustrating for a quick test it is a good thing get your head round. The reason I have gone this path for this demo was due to a [bug](https://github.com/terraform-providers/terraform-provider-azurerm/issues/656) in the terraform provider when I wrote the script, which has now been resolved in the latest version of the provider.
-
-The Azure Function App and the Key Vault have a circular dependency. The Key Vault needs to know the identity of the Function App and the Function App needs to know the uri of the Key Vault, to work around this in Terraform I have manually built up the uri again in the Function App appsettings section, rather than use the output of Key Vault resource.
+You will first need to setup a service principal you can use to run the scripts, while this is a little fustrating for a quick test it is a good thing get your head round. The reason I have gone this path for this demo was due to a [bug](https://github.com/terraform-providers/terraform-provider-azurerm/issues/656) in the terraform provider when I wrote the script, which has now been resolved in the latest version of the provider.
 
 Terraform currently doesn't support the Face API so this is built using the template resource, allowing for ARM to be used within the environment build [link](https://www.terraform.io/docs/providers/azurerm/r/template_deployment.html)
