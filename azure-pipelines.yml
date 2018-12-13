@@ -31,13 +31,6 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform apply'
 
-- bash: |
-   blob_path=$(terraform output -json primary_blob_endpoint | jq '.value' | tr -d '"')   
-   container="proxy"   
-   sed -i "s|{bloblocation}|$blob_path$container|g" ../src/ImageProcessor/proxies.json
-  workingDirectory: ./env
-  displayName: 'Transform proxies'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build Function'
   inputs:
@@ -75,18 +68,6 @@ steps:
        --destination "$fileendpoint$functionname-content" \
        --source $(build.artifactstagingdirectory) \
        --destination-path "site/wwwroot" \
-       --connection-string $connectionstring
-   
-   az storage blob upload \
-       --container-name "proxy" \
-       --file ../src/Proxy/index.html \
-       --name "index.html" \
-       --connection-string $connectionstring
-   
-    az storage blob upload \
-       --container-name "proxy" \
-       --file ../src/Proxy/jquery-3.3.1.min.js \
-       --name "jquery-3.3.1.min.js" \
        --connection-string $connectionstring
 
    az functionapp start \

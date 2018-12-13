@@ -8,7 +8,7 @@
                     "GET"
                 ]
             },
-            "backendUri": "{bloblocation}/{file}"
+            "backendUri": "%proxyFiles%"
         },
         "index": {
             "matchCondition": {
@@ -18,7 +18,7 @@
                 ]
             },
             
-            "backendUri": "{bloblocation}/index.html"
+            "backendUri": "%proxyIndex%"
         }
     }
 }
