@@ -31,8 +31,8 @@ resource "azurerm_function_app" "emotionfunc" {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
     face-key = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.emotionfunc-face-key.id})"
     face-endpoint = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.emotionfunc-face-endpoint.id})"
-    proxyIndex = "https://github.com/JimPaine/emotion-checker/blob/master/src/Proxy/index.html?raw=true"
-    proxyFiles = "https://github.com/JimPaine/emotion-checker/blob/master/src/Proxy/{file}?raw=true"
+    proxyIndex = "https://htmlpreview.github.io/?https://github.com/JimPaine/emotion-checker/blob/master/src/Proxy/index.html"
+    proxyFiles = "https://htmlpreview.github.io/?https://github.com/JimPaine/emotion-checker/blob/master/src/Proxy/{file}"
   }
 
   identity {
