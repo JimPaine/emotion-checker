@@ -100,11 +100,11 @@
                         },
                         {
                             "name": "proxyIndex",
-                            "value": "https://htmlpreview.github.io/?https://github.com/JimPaine/emotion-checker/blob/master/src/Proxy/index.html?raw=true"
+                            "value": "https://jimpaine.github.io/index.html"
                         },
                         {
                             "name": "proxyFiles",
-                            "value": "https://htmlpreview.github.io/?JimPaine/emotion-checker/blob/master/src/Proxy/{file}?raw=true"
+                            "value": "https://jimpaine.github.io/{file}"
                         }
                     ]
                 }                
