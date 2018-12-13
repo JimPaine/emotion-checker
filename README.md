@@ -8,6 +8,8 @@ Highlights being:
 
 [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8)
 
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
 ## Architecture
 
 - Consumer calls the function proxy which presents static html
