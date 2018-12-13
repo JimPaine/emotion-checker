@@ -1,6 +1,7 @@
 # Function & Cognitive demo
 
-A demo to show some great capabilities in Azure Functions. 
+A static website served via an Azure Function Proxy which then streams your camera to the Face API capturing and returning your age and your emotion, while also showing some great capabilities in Azure Functions
+
 Highlights being:
 - [App Setting KeyVault Syntax](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L32-L33)
 - [Proxy from App Settings](https://github.com/JimPaine/emotion-checker/blob/master/src/ImageProcessor/proxies.json#L21)[and](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L34-L35)
