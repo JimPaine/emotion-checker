@@ -4,7 +4,7 @@ A static website served via an Azure Function Proxy which then streams your came
 
 Highlights being:
 - [App Setting KeyVault Syntax](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L32-L33)
-- [Proxy from App Settings](https://github.com/JimPaine/emotion-checker/blob/master/src/ImageProcessor/proxies.json#L21)[and](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L34-L35)
+- [App Settings for proxy](https://github.com/JimPaine/emotion-checker/blob/master/src/ImageProcessor/proxies.json#L21) [and using apps seetings in proxy.json](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L34-L35)
 
 
 [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8)
