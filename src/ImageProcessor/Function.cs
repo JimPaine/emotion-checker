@@ -40,7 +40,6 @@ namespace ImageProcessor
             }
             catch (Exception exception)
             {
-                logger.LogError("");
                 logger.LogError(exception, "Failed processing image");
                 return new BadRequestObjectResult(exception);
             }
