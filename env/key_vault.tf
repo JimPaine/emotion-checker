@@ -42,7 +42,7 @@ resource "azurerm_key_vault_access_policy" "functionmsi" {
 
 resource "azurerm_key_vault_secret" "emotionfunc-face-key" {
   name      = "face-key"
-  value     = "${azurerm_cognitive_account.emotionfunc.primary_access.key}"
+  value     = "${azurerm_cognitive_account.emotionfunc.primary_access_key}"
   key_vault_id = "${azurerm_key_vault.emotionfunc.id}"
 }
 
