@@ -42,12 +42,12 @@ resource "azurerm_key_vault_access_policy" "functionmsi" {
 
 resource "azurerm_key_vault_secret" "emotionfunc-face-key" {
   name      = "face-key"
-  value     = "${azurerm_template_deployment.emotionfunc.outputs["face_key"]}"
+  value     = "${azurerm_cognitive_account.emotionfunc.primary_access.key}"
   vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint" {
   name      = "face-endpoint"
-  value     = "${azurerm_template_deployment.emotionfunc.outputs["face_endpoint"]}"
+  value     = "${azurerm_cognitive_account.emotionfunc.endpoint}"
   vault_uri = "${azurerm_key_vault.emotionfunc.vault_uri}"
 }

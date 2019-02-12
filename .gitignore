@@ -339,3 +339,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
+src/ImageProcessor/local.settings.json
+.cert/localhost.crt
+.cert/localhost.key

@@ -2,6 +2,12 @@
     "IsEncrypted": false,
     "Values": {
       "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-      "AzureWebJobsDashboard": "UseDevelopmentStorage=true"
+      "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+      "face-key": "82ab2fbecfdd40d5bc542d8c33c82e09",
+      "face-endpoint": "https://northeurope.api.cognitive.microsoft.com/face/v1.0",
+      "proxyFiles": "https://jimpaine.github.io/{file}",
+      "proxyIndex": "https://jimpaine.github.io/index.html",
+      "FUNCTIONS_EXTENSION_VERSION": "~2",
+      "AZURE_FUNCTION_PROXY_DISABLE_LOCAL_CALL": "true"
     }
 }
