@@ -64,7 +64,7 @@ namespace ImageProcessor
                 {
                     logger.LogError("Request to emotion was not successful");
                     string reason = await response.Content.ReadAsStringAsync();
-                    logger.LogError(reason);
+                    logger.LogError($"status: {response.StatusCode} - Reason: {reason}");
                     throw new Exception($"Failed to get emotion: {reason} using uri {faceUri}");
                 }               
 

@@ -3,10 +3,21 @@ queue:
 
 
 variables:
-  tfstate_key: 'jimpaine.emotion-checker.master.tfstate'
-  resource_name: 'emotionchecker'
+  - group: 'Terraform Service Principal'
+  - group: 'Terraform State'
+  - name: tfstate_key
+    value: 'jimpaine.emotion-checker.master.tfstate'
+  - name: resource_name
+    value: 'emotionchecker'
   
 steps:
+
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in **/*.tfvars'
+
+  inputs:
+    rootDirectory: ./env
+    targetFiles: '**/*.tfvars'
 
 - script: |
    terraform init \
@@ -19,14 +30,8 @@ steps:
   workingDirectory: ./env
   displayName: 'Terraform init'
 
-
 - script: |
-   terraform apply -auto-approve \
-       -var "subscription_id=$(subscription_id)" \
-       -var "resource_name=$(resource_name)" \
-       -var "client_id=$(client_id)" \
-       -var "client_secret=$(client_secret)" \
-       -var "tenant_id=$(tenant_id)"
+   terraform apply -auto-approve
 
   workingDirectory: ./env
   displayName: 'Terraform apply'

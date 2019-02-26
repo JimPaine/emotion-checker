@@ -48,6 +48,6 @@ resource "azurerm_key_vault_secret" "emotionfunc-face-key" {
 
 resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint" {
   name      = "face-endpoint"
-  value     = "${azurerm_cognitive_account.emotionfunc.endpoint}"
+  value     = "http://${azurerm_container_group.emotionfunc.ip_address}:${azurerm_container_group.emotionfunc.container.0.port}/face/v1.0"
   key_vault_id = "${azurerm_key_vault.emotionfunc.id}"
 }

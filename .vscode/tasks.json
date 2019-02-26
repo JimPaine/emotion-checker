@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean",
+            "options": {
+                "cwd": "${workspaceFolder}/src/ImageProcessor"
+            },
+            "command": "dotnet clean",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build",
+            "command": "dotnet build",
+            "type": "shell",
+            "dependsOn": "clean",
+            "options": {
+                "cwd": "${workspaceFolder}/src/ImageProcessor"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "runFunctionsHost",
+            "type": "shell",
+            "dependsOn": "runDockerContainer",
+            "options": {
+                "cwd": "${workspaceFolder}/src/ImageProcessor/bin/Debug/netcoreapp2.1"
+            },
+            "command": "func start --no-build --useHttps --cert ../../../../../.cert/localhost.pfx --password password",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$func-watch"
+        }
+    ]
+}
