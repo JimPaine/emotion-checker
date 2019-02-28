@@ -23,6 +23,7 @@ namespace ImageProcessor
     {       
         private static string faceKey = Environment.GetEnvironmentVariable("face-key");
         private static string faceEndpoint = Environment.GetEnvironmentVariable("face-endpoint");
+        private static HttpClient httpClient = new HttpClient();
 
         [FunctionName("EmotionChecker")]        
         public static async Task<IActionResult> Check(
@@ -50,8 +51,7 @@ namespace ImageProcessor
             logger.LogInformation($"Attempt to check face emotion via {faceUri}");
 
             image = image.Replace("data:image/jpeg;base64,", "");
-
-            using (HttpClient httpClient = HttpClientFactory.Create())
+            
             using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
             {
                 httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", secret);
