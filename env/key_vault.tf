@@ -57,7 +57,7 @@ resource "azurerm_key_vault_access_policy" "app" {
   resource_group_name = "${azurerm_key_vault.emotionfunc.resource_group_name}"
 
   tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
-  object_id = "a87376a6-3319-40e3-91c1-f891efaa4d96"
+  object_id = "f8daea97-62e7-4026-becf-13c2ea98e8b4"
 
   key_permissions = []
 
