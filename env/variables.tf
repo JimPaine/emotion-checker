@@ -9,4 +9,3 @@ variable "dnsimple_auth_token" {}
 variable "dnsimple_account" {}
 variable "domain" {}
 variable "email" {}
-variable "hostname" {}
