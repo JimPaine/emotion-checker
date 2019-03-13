@@ -1,4 +1,4 @@
-resource "dnsimple_record" "emotionchecker" {
+resource "dnsimple_record" "emotionfunc" {
   domain = "${var.domain}"
   name   = "smile"
   value  = "${azurerm_function_app.emotionfunc.default_hostname}"
