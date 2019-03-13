@@ -51,3 +51,26 @@ resource "azurerm_key_vault_secret" "emotionfunc-face-endpoint" {
   value     = "http://${azurerm_container_group.emotionfunc.ip_address}:${azurerm_container_group.emotionfunc.container.0.port}/face/v1.0"
   key_vault_id = "${azurerm_key_vault.emotionfunc.id}"
 }
+
+resource "azurerm_key_vault_access_policy" "app" {
+  vault_name          = "${azurerm_key_vault.emotionfunc.name}"
+  resource_group_name = "${azurerm_key_vault.emotionfunc.resource_group_name}"
+
+  tenant_id = "${data.azurerm_client_config.emotionfunc.tenant_id}"
+  object_id = "a87376a6-3319-40e3-91c1-f891efaa4d96"
+
+  key_permissions = []
+
+  secret_permissions = [
+      "list",
+      "set",
+      "get",
+    ]
+}
+
+resource "azurerm_key_vault_secret" "cert" {
+  name      = "cert"
+  value     = "${acme_certificate.emotionfunc.certificate_p12}"
+  key_vault_id = "${azurerm_key_vault.emotionfunc.id}"
+  content_type = "application/x-pkcs12"
+}
