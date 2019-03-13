@@ -76,7 +76,7 @@ DEPLOY
       "certificateName" = "${var.hostname}"
       "existingAppLocation" = "${azurerm_resource_group.emotionfunc.location}"
       "existingKeyVaultId" = "${azurerm_key_vault.emotionfunc.id}"
-      "existingKeyVaultSecretName" = "${azurerm_key_vault_secret.emotionfunc.name}"
+      "existingKeyVaultSecretName" = "${azurerm_key_vault_secret.cert.name}"
       "existingServerFarmId" = "${azurerm_app_service_plan.emotionfunc.id}"
       "existingWebAppName" = "${azurerm_function_app.emotionfunc.name}"
       "hostname" = "${azurerm_app_service_custom_hostname_binding.emotionfunc.hostname}"
