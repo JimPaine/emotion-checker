@@ -26,6 +26,8 @@ resource "azurerm_function_app" "emotionfunc" {
   storage_connection_string = "${azurerm_storage_account.emotionfunc.primary_connection_string}"
   
   version = "~2"
+  
+  https_only = true
 
   app_settings {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.emotionfunc.instrumentation_key}"
