@@ -11,7 +11,13 @@ Highlights being:
 
 [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8)
 
+## Deploy to Azure without ACI
+
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
+## Deploy to Azure with ACI
+
+- [Use Terraform](https://github.com/JimPaine/emotion-checker/tree/master/env)
 
 ## Architecture
 
