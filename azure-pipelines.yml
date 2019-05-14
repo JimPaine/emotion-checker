@@ -1,83 +1,104 @@
-queue:
-  name: Hosted Ubuntu 1604
+stages:
 
+- stage: Provision Environment
+  variables:
+    - group: 'Terraform Service Principal'
+    - group: 'Terraform State'
+    - name: tfstate_key
+      value: 'jimpaine.emotion-checker.master.tfstate'
+    - name: resource_name
+      value: 'emotionchecker'
 
-variables:
-  - group: 'Terraform Service Principal'
-  - group: 'Terraform State'
-  - name: tfstate_key
-    value: 'jimpaine.emotion-checker.master.tfstate'
-  - name: resource_name
-    value: 'emotionchecker'
+  jobs:
+  - job: Transform configuration
+    pool:      
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+      displayName: 'Replace tokens in **/*.tfvars'
+
+      inputs:
+        rootDirectory: ./env
+        targetFiles: '**/*.tfvars'
   
-steps:
+  - job: Run terraform
+    pool:      
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - script: |
+        terraform init \
+          -backend-config="resource_group_name=$(tfstate_resource_group)" \
+          -backend-config="storage_account_name=$(tfstate_storage_account)" \
+          -backend-config="container_name=$(tfstate_container)" \
+          -backend-config="key=$(tfstate_key)" \
+          -backend-config="access_key=$(tfstate_access_key)"
 
-- task: qetza.replacetokens.replacetokens-task.replacetokens@3
-  displayName: 'Replace tokens in **/*.tfvars'
+      workingDirectory: ./env
+      displayName: 'Terraform init'
 
-  inputs:
-    rootDirectory: ./env
-    targetFiles: '**/*.tfvars'
+    - script: |
+       terraform apply -auto-approve
 
-- script: |
-   terraform init \
-       -backend-config="resource_group_name=$(tfstate_resource_group)" \
-       -backend-config="storage_account_name=$(tfstate_storage_account)" \
-       -backend-config="container_name=$(tfstate_container)" \
-       -backend-config="key=$(tfstate_key)" \
-       -backend-config="access_key=$(tfstate_access_key)"
+      workingDirectory: ./env
+      displayName: 'Terraform apply'
 
-  workingDirectory: ./env
-  displayName: 'Terraform init'
+- stage: Build
+  jobs:
+  - job: Build Function
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: 'Build Function'
+        inputs:
+          command: publish
+          publishWebProjects: false
+          projects: './src/ImageProcessor/ImageProcessor.csproj'
+          arguments: '--configuration Release --output $(build.artifactstagingdirectory)'    
+          zipAfterPublish: false
+          modifyOutputPath: false
 
-- script: |
-   terraform apply -auto-approve
+      - task: PublishPipelineArtifact@0
+        inputs:
+          artifactName: 'function' 
+          targetPath: $(build.artifactstagingdirectory)
 
-  workingDirectory: ./env
-  displayName: 'Terraform apply'
+- stage: Deploy
+  variables:
+    function_name: placeholder
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build Function'
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: './src/ImageProcessor/ImageProcessor.csproj'
-    arguments: '--configuration Release --output $(build.artifactstagingdirectory)'    
-    zipAfterPublish: false
-    modifyOutputPath: false
+  jobs:
+  - job: Get Environment
+    pool:      
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - script: |
+        terraform init \
+          -backend-config="resource_group_name=$(tfstate_resource_group)" \
+          -backend-config="storage_account_name=$(tfstate_storage_account)" \
+          -backend-config="container_name=$(tfstate_container)" \
+          -backend-config="key=$(tfstate_key)" \
+          -backend-config="access_key=$(tfstate_access_key)"
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
+      workingDirectory: ./env
+      displayName: 'Terraform init'
 
-- bash: |
-   connectionstring=$(terraform output -json primary_connection_string | jq '.value' | tr -d '"')   
-   fileendpoint=$(terraform output -json file_endpoint | jq '.value' | tr -d '"')   
-   functionname=$(terraform output -json function_name | jq '.value' | tr -d '"')   
-   resourcegroup=$(terraform output -json resource_group | jq '.value' | tr -d '"')
-   
-   az login \
-        --service-principal \
-        -u $(app_url) \
-        -p $(client_secret) \
-        --tenant $(tenant_id)
+    - script: |
+        functionname=$(terraform output -json function_name | jq '.value' | tr -d '"')   
+        echo "##vso[task.setvariable variable=function_name;]$functionname"
 
-   az functionapp stop \
-       --name $functionname \
-       --resource-group $resourcegroup
-   
-   az storage file delete-batch \
-       --source "$fileendpoint$functionname-content" \
-       --connection-string $connectionstring
-   
-   az storage file upload-batch \
-       --destination "$fileendpoint$functionname-content" \
-       --source $(build.artifactstagingdirectory) \
-       --destination-path "site/wwwroot" \
-       --connection-string $connectionstring
+      workingDirectory: ./env
+      displayName: 'Get function name'
 
-   az functionapp start \
-       --name $functionname \
-       --resource-group $resourcegroup 
-
-  workingDirectory: ./env
-  displayName: Publish
+  - job: Deploy Function
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+    - task: AzureFunctionApp@1
+      displayName: Azure Function App Deploy
+      inputs:
+        azureSubscription: $(subscription_name)
+        appType: functionApp
+        appName: $(function_name)
+        package: $(System.artifactstagingdirectory)/**/*.zip
+        deploymentMethod: auto
