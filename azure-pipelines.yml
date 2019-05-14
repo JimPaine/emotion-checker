@@ -51,7 +51,7 @@ stages:
           publishWebProjects: false
           projects: './src/ImageProcessor/ImageProcessor.csproj'
           arguments: '--configuration Release --output $(build.artifactstagingdirectory)'    
-          zipAfterPublish: false
+          zipAfterPublish: true
           modifyOutputPath: false
 
       - task: PublishPipelineArtifact@0
