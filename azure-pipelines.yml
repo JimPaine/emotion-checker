@@ -97,7 +97,7 @@ stages:
     - task: AzureFunctionApp@1
       displayName: Azure Function App Deploy
       inputs:
-        azureSubscription: $(subscription_name)
+        azureSubscription: $(subscription_service_connection)
         appType: functionApp
         appName: $(function_name)
         package: $(System.artifactstagingdirectory)/**/*.zip
