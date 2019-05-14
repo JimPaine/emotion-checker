@@ -65,6 +65,13 @@ stages:
 
   jobs:
   - job: GetEnvironment
+    variables:
+      - group: 'Terraform Service Principal'
+      - group: 'Terraform State'
+      - name: tfstate_key
+        value: 'jimpaine.emotion-checker.master.tfstate'
+      - name: resource_name
+        value: 'emotionchecker'
     pool:      
       vmImage: 'Ubuntu-16.04'
     steps:
