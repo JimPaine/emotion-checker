@@ -21,10 +21,6 @@ stages:
         rootDirectory: ./env
         targetFiles: '**/*.tfvars'
   
-  - job: RunTerraform
-    pool:      
-      vmImage: 'Ubuntu-16.04'
-    steps:
     - script: |
         terraform init \
           -backend-config="resource_group_name=$(tfstate_resource_group)" \
@@ -90,15 +86,17 @@ stages:
       workingDirectory: ./env
       displayName: 'Get function name'
 
-  - job: DeployFunction
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    steps:
+    - task: DownloadPipelineArtifact@1
+      inputs:
+        buildType: current
+        artifactName: function
+        downloadPath: '$(System.ArtifactsDirectory)' 
+
     - task: AzureFunctionApp@1
       displayName: Azure Function App Deploy
       inputs:
         azureSubscription: $(subscription_service_connection)
         appType: functionApp
         appName: $(function_name)
-        package: $(System.artifactstagingdirectory)/**/*.zip
+        package: $(System.ArtifactsDirectory)/**/*.zip
         deploymentMethod: auto
