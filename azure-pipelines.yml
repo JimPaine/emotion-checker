@@ -1,6 +1,6 @@
 stages:
 
-- stage: Provision Environment
+- stage: ProvisionEnvironment
   variables:
     - group: 'Terraform Service Principal'
     - group: 'Terraform State'
