@@ -48,14 +48,12 @@ stages:
         displayName: 'dotnet build'
         workingDirectory: ./src      
 
-      - task: VSTest@2
-        displayName: 'Run Unit Tests'
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet test'
         inputs:
-          testSelector: 'testAssemblies'
-          testAssemblyVer2: '**\*test*.dll
-            !**\*TestAdapter.dll
-            !**\obj\**'
-          searchFolder: '$(System.DefaultWorkingDirectory)'
+          command: test
+          projects: '**/*Tests.csproj'
+          arguments: '--collect "Code coverage"'
 
       - task: CopyFiles@2
         displayName: 'Remove test assemblies'
