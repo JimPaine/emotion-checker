@@ -44,14 +44,9 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
-      - task: DotNetCoreCLI@2
-        displayName: 'Build Function'
-        inputs:
-          command: build
-          publishWebProjects: false
-          workingDirectory: ./src
-          arguments: '--configuration Release'
-          modifyOutputPath: false
+      - script: dotnet build --configuration $(buildConfiguration)
+        displayName: 'dotnet build'
+        workingDirectory: ./src      
 
       - task: VSTest@2
         displayName: 'Run Unit Tests'
