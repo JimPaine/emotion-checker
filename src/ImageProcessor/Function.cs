@@ -16,18 +16,19 @@ namespace ImageProcessor
     public class Function
     {
         private readonly HttpClient httpClient;
-        private readonly ILogger<Function> logger;        
+        private ILogger logger;        
 
-        public Function(HttpClient httpClient, ILogger<Function> logger)
+        public Function(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.logger = logger;
         }
 
         [FunctionName("EmotionChecker")]        
         public async Task<IActionResult> Check(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, ILogger logger)
         {
+        
+            this.logger = logger;
             this.logger.LogInformation("Processing request");
            
             try

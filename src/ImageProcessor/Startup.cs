@@ -11,8 +11,6 @@ namespace ImageProcessor
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {           
-            builder.Services.AddTransient<LoggerFactory>();
-            builder.Services.AddSingleton<ILogger<Function>, Logger<Function>>();
             builder.Services.AddSingleton<HttpClient>(new HttpClient());
         }
     }

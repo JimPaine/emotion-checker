@@ -57,11 +57,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            await function.Check(request);
+            Function function = new Function(client);
+            await function.Check(request, logger);
             
             
             // Assert
@@ -88,11 +88,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            await function.Check(request);
+            Function function = new Function(client);
+            await function.Check(request, logger);
             
             
             // Assert
@@ -121,11 +121,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.IsType<BadRequestObjectResult>(response);
@@ -160,11 +160,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.IsType<OkObjectResult>(response);
@@ -196,11 +196,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.IsType<NotFoundObjectResult>(response);
@@ -232,11 +232,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.IsType<NotFoundObjectResult>(response);
@@ -263,11 +263,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.True(pass);
@@ -293,11 +293,11 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
+            ILogger logger = Substitute.For<ILogger>();
             
             // Act
-            Function function = new Function(client, logger);
-            IActionResult response = await function.Check(request);
+            Function function = new Function(client);
+            IActionResult response = await function.Check(request, logger);
             
             // Assert
             Assert.True(pass);
