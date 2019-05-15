@@ -60,6 +60,7 @@ stages:
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)'
           Contents: |
+            **
             !**\*Test*
             !**\*xunit*
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
