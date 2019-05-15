@@ -60,7 +60,7 @@ stages:
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)'
           Contents: |
-            **
+            src/ImageProcessor/bin/Debug/**
             !**\*Test*
             !**\*xunit*
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
