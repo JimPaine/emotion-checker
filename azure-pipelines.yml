@@ -68,7 +68,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: 'Zip'
         inputs:
-          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/src/ImageProcessor/bin/Debug/netcoreapp2.1'
           includeRootFolder: false
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -77,14 +77,14 @@ stages:
       - task: PublishPipelineArtifact@0
         inputs:
           artifactName: 'function' 
-          targetPath: $(build.ArtifactStagingDirectory)
+          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
 - stage: Deploy
   variables:
     function_name: placeholder
 
   jobs:
-  - job: GetEnvironment
+  - job: Deploy
     variables:
       - group: 'Terraform Service Principal'
       - group: 'Terraform State'
