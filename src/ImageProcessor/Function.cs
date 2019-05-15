@@ -1,30 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace ImageProcessor
 {
     public class Function
     {
         private readonly HttpClient httpClient;
-        private readonly ILogger logger;        
+        private readonly ILogger<Function> logger;        
 
-        public Function(HttpClient httpClient, ILogger logger)
+        public Function(HttpClient httpClient, ILogger<Function> logger)
         {
             this.httpClient = httpClient;
             this.logger = logger;

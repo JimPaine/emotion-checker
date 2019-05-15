@@ -57,7 +57,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -88,7 +88,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -121,7 +121,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -160,7 +160,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -196,7 +196,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -232,7 +232,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -263,7 +263,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
@@ -293,7 +293,7 @@ namespace ImageProcessor.Tests
             };
             
             HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
+            ILogger<Function> logger = Substitute.For<ILogger<Function>>();
             
             // Act
             Function function = new Function(client, logger);
