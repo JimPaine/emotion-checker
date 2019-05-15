@@ -49,7 +49,7 @@ stages:
         inputs:
           command: build
           publishWebProjects: false
-          projects: './src/'
+          projects: './src/**/*.csproj'
           arguments: '--configuration Release'
           modifyOutputPath: false
 
