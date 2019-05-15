@@ -19,63 +19,72 @@ using Newtonsoft.Json;
 
 namespace ImageProcessor
 {
-    public static class Function
-    {       
-        private static string faceKey = Environment.GetEnvironmentVariable("face-key");
-        private static string faceEndpoint = Environment.GetEnvironmentVariable("face-endpoint");
-        private static HttpClient httpClient = new HttpClient();
+    public class Function
+    {
+        private readonly HttpClient httpClient;
+        private readonly ILogger logger;        
+
+        public Function(HttpClient httpClient, ILogger logger)
+        {
+            this.httpClient = httpClient;
+            this.logger = logger;
+        }
 
         [FunctionName("EmotionChecker")]        
-        public static async Task<IActionResult> Check(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request, ILogger logger)
+        public async Task<IActionResult> Check(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest request)
         {
-            logger.LogInformation("Processing request");
+            this.logger.LogInformation("Processing request");
            
             try
             {                                
                 string image = await request.ReadAsStringAsync();
 
-                IList<DetectedFace> response = await GetEmotion(image, faceEndpoint, faceKey, logger);
+                IList<DetectedFace> response = await this.GetEmotion(image);
 
                 return response != null ? new OkObjectResult(response) : new NotFoundObjectResult("No faces found") as IActionResult;
             }
             catch (Exception exception)
             {
-                logger.LogError(exception, "Failed processing image");
+                this.logger.LogError(exception, "Failed processing image");
                 return new BadRequestObjectResult(exception);
             }
         }
 
-        private static async Task<IList<DetectedFace>> GetEmotion(string image, string faceUri, string secret, ILogger logger)
+        private async Task<IList<DetectedFace>> GetEmotion(string image)
         {
-            logger.LogInformation($"Attempt to check face emotion via {faceUri}");
+            string faceKey = Environment.GetEnvironmentVariable("face-key");
+            string faceEndpoint = Environment.GetEnvironmentVariable("face-endpoint");
+
+            this.logger.LogInformation($"Attempt to check face emotion via {faceEndpoint}");
 
             image = image.Replace("data:image/jpeg;base64,", "");
             
             using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
             {
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", secret);
+                this.httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceKey);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-                HttpResponseMessage response = await httpClient.PostAsync(
-                    new Uri($"{faceUri}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion,gender"), content);                
+                HttpResponseMessage response = await this.httpClient.PostAsync(
+                    new Uri($"{faceEndpoint}/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion,gender"), content);                
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    logger.LogError("Request to emotion was not successful");
+                    this.logger.LogError("Request to emotion was not successful");
                     string reason = await response.Content.ReadAsStringAsync();
-                    logger.LogError($"status: {response.StatusCode} - Reason: {reason}");
-                    throw new Exception($"Failed to get emotion: {reason} using uri {faceUri}");
-                }               
-
-                logger.LogInformation("Emotion obtained");               
+                    this.logger.LogError($"status: {response.StatusCode} - Reason: {reason}");
+                    throw new Exception($"Failed to get emotion: {reason} using uri {faceEndpoint}");
+                }                               
 
                 IList<DetectedFace> result = await response.Content.ReadAsAsync<IList<DetectedFace>>();     
 
                 if(result == null || !result.Any()) 
-                {                    
+                {
+                    this.logger.LogInformation("Face not found");
                     return null;
                 }
+
+                this.logger.LogInformation("Face found");
 
                 return result;
             }     

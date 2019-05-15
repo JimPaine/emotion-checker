@@ -47,17 +47,43 @@ stages:
       - task: DotNetCoreCLI@2
         displayName: 'Build Function'
         inputs:
-          command: publish
+          command: build
           publishWebProjects: false
-          projects: './src/ImageProcessor/ImageProcessor.csproj'
-          arguments: '--configuration Release --output $(build.artifactstagingdirectory)'    
-          zipAfterPublish: true
+          projects: './src/'
+          arguments: '--configuration Release'
           modifyOutputPath: false
+
+      - task: VSTest@2
+        displayName: 'Run Unit Tests'
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: '**\*test*.dll
+            !**\*TestAdapter.dll
+            !**\obj\**'
+          searchFolder: '$(System.DefaultWorkingDirectory)'
+
+      - task: CopyFiles@2
+        displayName: 'Remove test assemblies'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)'
+          Contents: |
+            '!**\*Test*
+            !**\*xunit*'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+      - task: ArchiveFiles@2
+        displayName: 'Zip'
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          replaceExistingArchive: true
 
       - task: PublishPipelineArtifact@0
         inputs:
           artifactName: 'function' 
-          targetPath: $(build.artifactstagingdirectory)
+          targetPath: $(build.ArtifactStagingDirectory)
 
 - stage: Deploy
   variables:
