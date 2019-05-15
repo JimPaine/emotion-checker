@@ -44,7 +44,7 @@ stages:
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
-      - script: dotnet build --configuration $(buildConfiguration)
+      - script: dotnet build
         displayName: 'dotnet build'
         workingDirectory: ./src      
 
