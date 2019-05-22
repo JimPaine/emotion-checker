@@ -26,7 +26,7 @@ resource "azurerm_container_group" "emotionfunc" {
   container {
     name   = "hw"
     image  = "containerpreview.azurecr.io/microsoft/cognitive-services-face"
-    cpu    = "1"
+    cpu    = "4"
     memory = "4"
     
     ports  = {
