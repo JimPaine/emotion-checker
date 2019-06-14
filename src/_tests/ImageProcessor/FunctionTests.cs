@@ -272,35 +272,5 @@ namespace ImageProcessor.Tests
             // Assert
             Assert.True(pass);
         }
-        
-        [Fact]
-        public async Task Function_CogServicesKey_PassedInHeaders()
-        {
-            // Setup
-            Environment.SetEnvironmentVariable("face-key", "face-key");
-            Environment.SetEnvironmentVariable("face-endpoint", "http://localhost");
-            string encoding = Convert.ToBase64String(Encoding.UTF8.GetBytes("KEEPME"));
-            HttpRequest request = Substitute.For<HttpRequest>();
-            Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(encoding));
-            request.Body.Returns(stream);
-
-            bool pass = false;
-            Func<HttpRequestMessage, Task<HttpResponseMessage>> func = async r =>
-            {
-                await Task.Run(() => { });
-                pass = r.Headers.GetValues("Ocp-Apim-Subscription-Key").First() == "face-key";
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            };
-            
-            HttpClient client = new HttpClient(new HttpMocker(func));
-            ILogger logger = Substitute.For<ILogger>();
-            
-            // Act
-            Function function = new Function(client);
-            IActionResult response = await function.Check(request, logger);
-            
-            // Assert
-            Assert.True(pass);
-        }
     }
 }

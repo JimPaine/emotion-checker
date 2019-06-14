@@ -48,7 +48,6 @@ namespace ImageProcessor
 
         private async Task<IList<DetectedFace>> GetEmotion(string image)
         {
-            string faceKey = Environment.GetEnvironmentVariable("face-key");
             string faceEndpoint = Environment.GetEnvironmentVariable("face-endpoint");
 
             this.logger.LogInformation($"Attempt to check face emotion via {faceEndpoint}");
@@ -56,8 +55,7 @@ namespace ImageProcessor
             image = image.Replace("data:image/jpeg;base64,", "");
             
             using (ByteArrayContent content = new ByteArrayContent(Convert.FromBase64String(image)))
-            {
-                this.httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceKey);
+            {                
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
                 HttpResponseMessage response = await this.httpClient.PostAsync(
