@@ -35,6 +35,7 @@ resource "azurerm_function_app" "emotionfunc" {
     face-endpoint = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.emotionfunc-face-endpoint.id})"
     proxyIndex = "https://jimpaine.github.io/index.html"
     proxyFiles = "https://jimpaine.github.io/{file}"
+    abc = "1232"
   }
 
   identity {
