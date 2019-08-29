@@ -16,7 +16,7 @@ resource "acme_certificate" "emotionfunc" {
   dns_challenge {
     provider = "dnsimple"
 
-    config {
+    config = {
         DNSIMPLE_OAUTH_TOKEN = var.dnsimple_auth_token
     }    
   }
