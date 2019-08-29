@@ -1,9 +1,9 @@
 provider "azurerm" {
-  subscription_id = "${var.subscription_id}"
+  subscription_id = var.subscription_id
   version         = "~> 1.33"
-  client_id       = "${var.client_id}"
-  client_secret   = "${var.client_secret}"
-  tenant_id       = "${var.tenant_id}"
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
 }
 
 provider "random" {
@@ -16,6 +16,6 @@ provider "acme" {
 }
 
 provider "dnsimple" {
-  token = "${var.dnsimple_auth_token}"
-  account = "${var.dnsimple_account}"
+  token = var.dnsimple_auth_token
+  account = var.dnsimple_account
 }

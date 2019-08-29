@@ -1,13 +1,13 @@
 resource "azurerm_app_service_custom_hostname_binding" "emotionfunc" {
-  hostname            = "${dnsimple_record.emotionfunc.hostname}"
-  app_service_name    = "${azurerm_function_app.emotionfunc.name}"
-  resource_group_name = "${azurerm_resource_group.emotionfunc.name}"
+  hostname            = dnsimple_record.emotionfunc.hostname
+  app_service_name    = azurerm_function_app.emotionfunc.name
+  resource_group_name = azurerm_resource_group.emotionfunc.name
 }
 
 
 resource "azurerm_template_deployment" "emotionfunc" {
   name                = "${var.resource_name}${random_id.emotionfunc.dec}cert"
-  resource_group_name = "${azurerm_resource_group.emotionfunc.name}"
+  resource_group_name = azurerm_resource_group.emotionfunc.name
 
   template_body = <<DEPLOY
     {
@@ -73,13 +73,13 @@ resource "azurerm_template_deployment" "emotionfunc" {
 DEPLOY
 
   parameters {
-      "certificateName" = "${dnsimple_record.emotionfunc.hostname}"
-      "existingAppLocation" = "${azurerm_resource_group.emotionfunc.location}"
-      "existingKeyVaultId" = "${azurerm_key_vault.emotionfunc.id}"
-      "existingKeyVaultSecretName" = "${azurerm_key_vault_secret.cert.name}"
-      "existingServerFarmId" = "${azurerm_app_service_plan.emotionfunc.id}"
-      "existingWebAppName" = "${azurerm_function_app.emotionfunc.name}"
-      "hostname" = "${azurerm_app_service_custom_hostname_binding.emotionfunc.hostname}"
+      certificateName = dnsimple_record.emotionfunc.hostname
+      existingAppLocation = azurerm_resource_group.emotionfunc.location
+      existingKeyVaultId = azurerm_key_vault.emotionfunc.id
+      existingKeyVaultSecretName = azurerm_key_vault_secret.cert.name
+      existingServerFarmId = azurerm_app_service_plan.emotionfunc.id
+      existingWebAppName = azurerm_function_app.emotionfunc.name
+      hostname = azurerm_app_service_custom_hostname_binding.emotionfunc.hostname
   }
 
   deployment_mode = "Incremental"
