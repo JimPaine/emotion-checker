@@ -1,9 +1,9 @@
 provider "azurerm" {
-  subscription_id = var.subscription-id
+  subscription_id = var.subscriptionid
   version         = "~> 1.33"
-  client_id       = var.client-id
-  client_secret   = var.client-secret
-  tenant_id       = var.tenant-id
+  client_id       = var.clientid
+  client_secret   = var.clientsecret
+  tenant_id       = var.tenantid
 }
 
 provider "random" {
