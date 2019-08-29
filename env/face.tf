@@ -29,7 +29,10 @@ resource "azurerm_container_group" "emotionfunc" {
     cpu    = "4"
     memory = "4"
     
-    port = 5000
+    ports = {
+      port     = 5000
+      protocol = "TCP"
+    }
 
     environment_variables = {
       Eula = "accept"
