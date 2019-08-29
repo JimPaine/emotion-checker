@@ -35,9 +35,9 @@ resource "azurerm_container_group" "emotionfunc" {
     }
 
     environment_variables {
-      "Eula" = "accept"
-      "Billing" = "${azurerm_cognitive_account.emotionfunc.endpoint}"
-      "ApiKey" = "${azurerm_cognitive_account.emotionfunc.primary_access_key}"
+      Eula = "accept"
+      Billing = "${azurerm_cognitive_account.emotionfunc.endpoint}"
+      ApiKey = "${azurerm_cognitive_account.emotionfunc.primary_access_key}"
     }
   }
 }
