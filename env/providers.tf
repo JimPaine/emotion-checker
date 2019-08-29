@@ -12,7 +12,7 @@ provider "random" {
 
 provider "acme" {
   server_url = "https://acme-v02.api.letsencrypt.org/directory"
-  version = "~>1.1.1"
+  version = "~>1.2"
 }
 
 provider "dnsimple" {
