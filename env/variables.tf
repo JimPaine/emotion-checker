@@ -1,8 +1,8 @@
 variable "resource_name" {}
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-variable "tenant_id" {}
+variable "subscription-id" {}
+variable "client-id" {}
+variable "client-secret" {}
+variable "tenant-id" {}
 variable "registry_username" {}
 variable "registry_password" {}
 variable "dnsimple_auth_token" {}
