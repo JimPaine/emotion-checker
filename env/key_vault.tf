@@ -67,7 +67,7 @@ resource "azurerm_key_vault_access_policy" "app" {
       "get",
     ]
 }
-
+s
 resource "azurerm_key_vault_secret" "cert" {
   name      = "cert"
   value     = acme_certificate.emotionfunc.certificate_p12
