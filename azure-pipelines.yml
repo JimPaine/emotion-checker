@@ -2,9 +2,8 @@ stages:
 
 - stage: ProvisionEnvironment
   variables:
-    - group: 'Terraform Service Principal'
-    - group: 'Terraform State'
-    - name: tfstate_key
+    - group: 'Terraform'
+    - name: tfstatename
       value: 'jimpaine.emotion-checker.master.tfstate'
     - name: resource_name
       value: 'emotionchecker'
@@ -22,12 +21,12 @@ stages:
         targetFiles: '**/*.tfvars'
   
     - script: |
-        terraform init \
-          -backend-config="resource_group_name=$(tfstate_resource_group)" \
-          -backend-config="storage_account_name=$(tfstate_storage_account)" \
-          -backend-config="container_name=$(tfstate_container)" \
-          -backend-config="key=$(tfstate_key)" \
-          -backend-config="access_key=$(tfstate_access_key)"
+         terraform init \
+          -backend-config="resource_group_name=$(resourcegroup)" \
+          -backend-config="storage_account_name=$(storageaccount)" \
+          -backend-config="container_name=$(containername)" \
+          -backend-config="key=$(tfstatename)" \
+          -backend-config="access_key=$(accesskey)"
 
       workingDirectory: ./env
       displayName: 'Terraform init'
