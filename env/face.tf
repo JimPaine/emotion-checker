@@ -29,12 +29,12 @@ resource "azurerm_container_group" "emotionfunc" {
     cpu    = "4"
     memory = "4"
     
-    ports  = {
+    port = {
       port     = 5000
       protocol = "TCP"
     }
 
-    environment_variables {
+    environment_variables = {
       Eula = "accept"
       Billing = azurerm_cognitive_account.emotionfunc.endpoint
       ApiKey = azurerm_cognitive_account.emotionfunc.primary_access_key

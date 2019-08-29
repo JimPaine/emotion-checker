@@ -72,7 +72,7 @@ resource "azurerm_template_deployment" "emotionfunc" {
 }
 DEPLOY
 
-  parameters {
+  parameters = {
       certificateName = dnsimple_record.emotionfunc.hostname
       existingAppLocation = azurerm_resource_group.emotionfunc.location
       existingKeyVaultId = azurerm_key_vault.emotionfunc.id
