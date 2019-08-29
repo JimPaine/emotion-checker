@@ -30,7 +30,7 @@ resource "azurerm_container_group" "emotionfunc" {
     memory = "4"
     
     port = {
-      port     = 5000
+      number     = 5000
       protocol = "TCP"
     }
 
