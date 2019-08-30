@@ -105,7 +105,7 @@ stages:
       displayName: 'Terraform init'
 
     - script: |
-        functionname=$(terraform output -json function_name | jq '.value' | tr -d '"')   
+        functionname=$(terraform output function_name)   
         echo "##vso[task.setvariable variable=function_name;]$functionname"
 
       workingDirectory: ./env
