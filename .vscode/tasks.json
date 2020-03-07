@@ -37,7 +37,7 @@
             "options": {
                 "cwd": "${workspaceFolder}/src/ImageProcessor/bin/Debug/netcoreapp2.1"
             },
-            "command": "func start --no-build --useHttps --cert ../../../../../.cert/localhost.pfx --password password",
+            "command": "func start --no-build",
             "presentation": {
                 "reveal": "always"
             },

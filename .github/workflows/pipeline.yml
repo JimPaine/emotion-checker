@@ -14,10 +14,11 @@ jobs:
       with:
         dotnet-version: 2.2.108
     - name: Build with dotnet
-      run: dotnet build src/ImageProcessor/ImageProcessor.csproj --configuration Release
+      run: dotnet publish src/ImageProcessor/ImageProcessor.csproj --configuration Release
 
     # deploy web app using publish profile credentials
     - uses: azure/appservice-actions/webapp@master
       with: 
         app-name: ImageProcessor
         publish-profile: ${{ secrets.azureWebAppPublishProfile }}
+        package: src/ImageProcessor/bin/Release/netcoreapp2.1
