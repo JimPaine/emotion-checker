@@ -8,13 +8,6 @@ Highlights being:
 - [and using apps settings in proxy.json](https://github.com/JimPaine/emotion-checker/blob/master/env/functions.tf#L34-L35)
 - [Cognitive Service AI Model running in ACI](https://github.com/JimPaine/emotion-checker/blob/master/env/face.tf#L13-L43)
 
-
-| Stage | Status |
-| ----- | ------ |
-| Provision Environment | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker?branchName=master&stageName=ProvisionEnvironment)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8?branchName=master) |
-| Build | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker?branchName=master&stageName=Build)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8?branchName=master) |
-| Publish | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.emotion-checker?branchName=master&stageName=Deploy)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=8?branchName=master) |
-
 ## Deploy to Azure without ACI
 
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
