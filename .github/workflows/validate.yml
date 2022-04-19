@@ -1,0 +1,19 @@
+name: validate
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0
+    - name: Test
+      run: dotnet test src/ImageProcessor.sln
+    - name: Build
+      run: dotnet publish src/ImageProcessor/ImageProcessor.csproj --configuration Release
