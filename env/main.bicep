@@ -83,7 +83,7 @@ resource ui 'Microsoft.App/containerApps@2022-01-01-preview' = {
       containers: [
         {
           name: 'ui'
-          image: api_image
+          image: ui_image
           env: [
             {
               name: 'api-uri'

@@ -172,7 +172,7 @@
         function processImage(x)
         {
             $.ajax({
-                url: "http://localhost:8088/api/face",
+                url: env('api-uri'),
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
