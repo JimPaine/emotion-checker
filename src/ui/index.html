@@ -4,8 +4,8 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    <meta name="mobile-web-app-capable" content="yes">
-   <title>Azure Functions - Cognitive Services Demo</title>
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+   <title>Azure Container Apps - Cognitive Services Demo</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
    <style>
        #canvasWrapper {
            z-index: 500;
@@ -27,18 +27,16 @@
                     <div class="col-sm-8 col-md-7 py-4">
                         <h4 class="text-white">About</h4>
                         <p class="text-muted">
-                            The purpose for this demo is to highlight the capabilities of both Azure Functions and Azure Cognitive Services. 
-                            Additional services will be included within the architecture for purposes such as Security and usability. These will be things such 
-                            as SignalR service and Azure Key vault
+                            The purpose for this demo is to highlight the capabilities of both Azure Container Apps and Azure Cognitive Services.
                         </p>
                     </div>
                     <div class="col-sm-4 offset-md-1 py-4">
                         <h4 class="text-white">Contact</h4>
                         <ul class="list-unstyled">
                             <li class="text-white">Jim Paine</li>
-                            <li class="text-white">Azure App Dev Specialist @ Microsoft</li>
+                            <li class="text-white">Azure Senior Program Manager @ Microsoft</li>
                             <li class="text-white">Follow on Twitter @jimpaine_io</li>
-                            <li><a class="text-white" href="https://github.com/JimPaine">View on GitHub</a></li>
+                            <li><a class="text-white" href="https://github.com/JimPaine/emotion-checker">View on GitHub</a></li>
                         </ul>
                     </div>
                 </div>
@@ -47,7 +45,7 @@
 
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container d-flex justify-content-between">
-                <a class="navbar-brand d-flex align-items-center" href="#">              
+                <a class="navbar-brand d-flex align-items-center" href="#">
                     <strong>Jim.Cloud</strong>
                 </a>
                 <button class="navbar-toggler" aria-expanded="false" aria-controls="navbarHeader" aria-label="Toggle navigation" type="button" data-toggle="collapse" data-target="#navbarHeader">
@@ -57,29 +55,29 @@
         </div>
     </header>
     <main role="main">
-    
+
         <div class="album py-5 bg-light">
-            <div class="container">    
-                <div class="row">                  
+            <div class="container">
+                <div class="row">
                     <div class="col-md-12">
-                        <div class="card mb-12 shadow-sm">  
+                        <div class="card mb-12 shadow-sm">
                            <button id="playButton">Start</button>
-                            
+
                             <div id="videoWrapper">
-                                <video id="video" width="100%" autoplay="true" muted="muted" playsinline> </video>                                   
-                            </div>   
-                            
+                                <video id="video" width="100%" autoplay="true" muted="muted" playsinline> </video>
+                            </div>
+
                             <div id="canvasWrapper">
                                 <canvas id="canvas"></canvas>
                             </div>
 
                             <div id="faceWrapper">
                                 <canvas id="faceCanvas"></canvas>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
-                </div>              
-            </div> 
+                </div>
+            </div>
         </div>
     </main>
     <div id="tempwrapper">
@@ -90,44 +88,44 @@
     <script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-           
+
 
     <script>
         var canvas = document.getElementById('canvas');
         var faceCanvas = document.getElementById('faceCanvas');
         var context = canvas.getContext('2d');
-        var video = document.getElementById('video'); 
-        var videoWrapper = document.getElementById('videoWrapper');             
-        var canvasWrapper = document.getElementById('canvasWrapper');           
-        var faceWrapper = document.getElementById('faceWrapper');            
-        var tempcanvas = document.getElementById('tempcanvas'); 
+        var video = document.getElementById('video');
+        var videoWrapper = document.getElementById('videoWrapper');
+        var canvasWrapper = document.getElementById('canvasWrapper');
+        var faceWrapper = document.getElementById('faceWrapper');
+        var tempcanvas = document.getElementById('tempcanvas');
         var tempcontext = tempcanvas.getContext('2d');
         var playButton = document.getElementById('playButton');
         var scaleDown = 3;
 
         function size(){
             canvas.width = video.clientWidth;
-            canvas.height = video.clientHeight;                
+            canvas.height = video.clientHeight;
             canvas.style.width = videoWrapper.clientWidth;
             canvas.style.height = videoWrapper.clientHeight;
             canvasWrapper.style.marginTop = videoWrapper.clientHeight * -1 + "px";
 
             faceCanvas.width = video.clientWidth;
-            faceCanvas.height = video.clientHeight;                
+            faceCanvas.height = video.clientHeight;
             faceCanvas.style.width = videoWrapper.clientWidth;
             faceCanvas.style.height = videoWrapper.clientHeight;
             faceWrapper.style.marginTop = videoWrapper.clientHeight * -1 + "px";
-            
+
             tempcanvas.width = video.clientWidth / scaleDown;
-            tempcanvas.height = video.clientHeight / scaleDown;                
+            tempcanvas.height = video.clientHeight / scaleDown;
             tempcanvas.style.width = videoWrapper.clientWidth / scaleDown;
             tempcanvas.style.height = videoWrapper.clientHeight / scaleDown;
-        } 
+        }
 
-        window.addEventListener('resize', function(){ 
+        window.addEventListener('resize', function(){
             size();
-        });      
-       
+        });
+
         playButton.addEventListener('click', function(){
           video.play();
         });
@@ -142,74 +140,97 @@
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
-                    
-                    context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);                   
+
+                    context.drawImage($this, 0, 0, video.clientWidth, video.clientHeight);
 
                     if(imageProcessing === false){
                         tempcontext.drawImage($this, 0, 0, video.clientWidth / scaleDown, video.clientHeight / scaleDown);
-                        var x = tempcanvas.toDataURL("image/jpeg", 0.5); 
-                        imageProcessing = true;                
+                        var x = tempcanvas.toDataURL("image/jpeg", 0.5);
+                        imageProcessing = true;
                         processImage(x);
-                    }  
-                                        
-                    setTimeout(loop, 1000 / 30); // drawing at 30fps
+                    }
+
+                    setTimeout(loop, 1000 / 4); // drawing at 4fps
                 }
             })();
-        }, 0);     
+        }, 0);
 
-        
-        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { 
+
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             var constraints = { video: { facingMode: "user" } };
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                   video.srcObject = stream;                
+                   video.srcObject = stream;
                    video.onloadedmetadata = function(e) {
                            video.play();
-                       };  
-                   size();             
+                       };
+                   size();
                }).catch(function(exception){
                    alert(exception);
-               });           
+               });
         }
-        
+
         function processImage(x)
-        {         
+        {
             $.ajax({
-                url: "api/EmotionChecker",
+                url: "http://localhost:8088/api/face",
                 type: "POST",
                 data: x,
                 contentType: "application/octet-stream",
-                
+
                 success: function (response) {
                     var ctx = faceCanvas.getContext('2d');
-                    var json = JSON.stringify(response, null, 2);
-                    var item = JSON.parse(json);
+                    var item = JSON.parse(response);
 
                     ctx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
 
                     ctx.lineWidth=1;
                     ctx.shadowBlur=1;
-                    ctx.shadowColor = "rgba(0,0,0,1)";
-                    ctx.font = "16px Arial";
-                    ctx.strokeStyle = 'white'; 
-                    
+                    ctx.shadowColor = "rgba(1,1,1,1)";
+                    ctx.font = "64px Arial";
+                    ctx.strokeStyle = 'white';
+
                     ctx.beginPath();
 
                     for (i = 0; i < item.length; i++){
                         var left = item[i].faceRectangle.left * scaleDown;
                         var y = ((item[i].faceRectangle.top*scaleDown)+(item[i].faceRectangle.height*scaleDown))+20;
                         ctx.rect(left, item[i].faceRectangle.top * scaleDown, item[i].faceRectangle.width * scaleDown, item[i].faceRectangle.height * scaleDown);
-                        ctx.strokeText(item[i].faceAttributes.age, left, y);
-                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, left, y + (15 * 1));
-                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, left, y  + (15 * 2));
-                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, left, y + (15 * 3));
-                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, left, y + (15 * 4));
-                        ctx.strokeText("happiness: "+item[i].faceAttributes.emotion.happiness, left, y + (15 * 5));
-                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, left, y + (15 * 6));
-                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, left, y + (15 * 7));
-                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, left, y + (15 * 8));
+                        var emoji = "";
+                        if (item[i].faceAttributes.emotion.anger > 0.75) {
+                            emoji = "😡";
+                        }
+                        if (item[i].faceAttributes.emotion.disgust > 0.75) {
+                            emoji = "🤢";
+                        }
+                        if (item[i].faceAttributes.emotion.fear > 0.75) {
+                            emoji = "😱";
+                        }
+                        if (item[i].faceAttributes.emotion.happiness > 0.75) {
+                            emoji = "😀";
+                        }
+                        if (item[i].faceAttributes.emotion.neutral > 0.75) {
+                            emoji = "😐";
+                        }
+                        if (item[i].faceAttributes.emotion.sadness > 0.75) {
+                            emoji = "😢";
+                        }
+                        if (item[i].faceAttributes.emotion.surprise > 0.75) {
+                            emoji = "😮";
+                        }
+                        ctx.strokeText(emoji + item[i].faceAttributes.age, left, y - 32);
+
+                        ctx.font = "16px Arial";
+                        ctx.strokeText("anger: "+item[i].faceAttributes.emotion.anger, left, y);
+                        ctx.strokeText("contempt: "+item[i].faceAttributes.emotion.contempt, left, y  + (15));
+                        ctx.strokeText("disgust: "+item[i].faceAttributes.emotion.disgust, left, y + (15 * 2));
+                        ctx.strokeText("fear: "+item[i].faceAttributes.emotion.fear, left, y + (15 * 3));
+                        ctx.strokeText("happiness:" +item[i].faceAttributes.emotion.happiness, left, y + (15 * 4));
+                        ctx.strokeText("neutral: "+item[i].faceAttributes.emotion.neutral, left, y + (15 * 5));
+                        ctx.strokeText("sadness: "+item[i].faceAttributes.emotion.sadness, left, y + (15 * 6));
+                        ctx.strokeText("surprise: "+item[i].faceAttributes.emotion.surprise, left, y + (15 * 7));
                     }
 
-                    ctx.stroke();  
+                    ctx.stroke();
                     console.log("Found faces");
                     imageProcessing = false;
                 },
