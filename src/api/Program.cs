@@ -33,9 +33,9 @@ app.MapPost("api/face", async (HttpRequest request) => {
         HttpResponseMessage response = await client.PostAsync("face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,emotion", content);
         string body = await response.Content.ReadAsStringAsync();
 
-        if (!response.IsSuccessStatusCode) return Results.BadRequest($"Failed to get emotion: {body} using uri {client.BaseAddress}");
-
-        return result != null && result.Any() ? Results.Ok(body) : Results.BadRequest();
+        return response.IsSuccessStatusCode
+            ? Results.Ok(body)
+            : Results.BadRequest($"Failed to get emotion: {body} using uri {client.BaseAddress}");
     }
 });
 
